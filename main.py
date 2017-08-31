@@ -18,4 +18,5 @@ if __name__ == '__main__':
         kws_threshold=1e+20)
     print("kws inited")
     for phrase in ls:
+        print("kw detected")
         manager.tell({"command":"kw"})
