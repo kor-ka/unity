@@ -22,9 +22,6 @@ class InterceptorActor(pykka.ThreadingActor):
         try:
 
             r = sr.Recognizer()
-            with sr.Microphone() as source:
-                audio = r.listen(source)
-
             print("Google Speech Recognition thinks you said " + r.recognize_google(self.mic, key = "AIzaSyA97hSk7WuA-w4fCdHAK9h7LWEhiExb7do"))
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
