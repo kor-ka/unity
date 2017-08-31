@@ -56,7 +56,7 @@ class PyAd(Ad):
         # super(PyAd, self).__init__()
 
     def readinto(self, DATA):
-        buf = self.stream.read(self.buffer_size)
+        buf = self.stream.read(self.buffer_size, exception_on_overflow=False)
         DATA[:] = buf
         return buf
 
