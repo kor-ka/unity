@@ -7,7 +7,6 @@ from ls import LiveSpeech
 from manager import ManagerActor
 
 if __name__ == '__main__':
-    manager = ManagerActor.start()
 
     model_path = "../pocketsphinx/model"
     ls = LiveSpeech(
@@ -16,6 +15,8 @@ if __name__ == '__main__':
         dic=os.path.join(model_path, 'en-us/unity.dict'),
         keyphrase='UNITY',
         kws_threshold=1e+20)
+    manager = ManagerActor.start(ls.get_mic())
+
     print("kws inited")
     for phrase in ls:
         print("kw detected")

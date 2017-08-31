@@ -4,9 +4,10 @@ import subprocess
 import speech_recognition as sr
 
 class InterceptorActor(pykka.ThreadingActor):
-    def __init__(self, manager):
+    def __init__(self, manager, mic):
         super(InterceptorActor, self).__init__()
         self.manager = manager
+        self.mic = mic
 
     def on_keyword(self):
         print("hi there")
@@ -24,7 +25,7 @@ class InterceptorActor(pykka.ThreadingActor):
             with sr.Microphone() as source:
                 audio = r.listen(source)
 
-            print("Google Speech Recognition thinks you said " + r.recognize_google(audio, key = "AIzaSyA97hSk7WuA-w4fCdHAK9h7LWEhiExb7do"))
+            print("Google Speech Recognition thinks you said " + r.recognize_google(self.mic, key = "AIzaSyA97hSk7WuA-w4fCdHAK9h7LWEhiExb7do"))
         except sr.UnknownValueError:
             print("Google Speech Recognition could not understand audio")
         except sr.RequestError as e:

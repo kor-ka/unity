@@ -44,6 +44,9 @@ class LiveSpeech(Pocketsphinx):
         self.ad.stop()
         raise StopIteration
 
+    def get_mic(self):
+        return self.ad.stream
+
 
 class PyAd(Ad):
     def __init__(self, sampling_rate, buffer_size):
