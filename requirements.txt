@@ -1,4 +1,3 @@
 pykka
-SpeechRecognition
 PyAudio
 pocketsphinx

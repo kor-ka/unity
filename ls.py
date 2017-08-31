@@ -53,7 +53,7 @@ class PyAd(Ad):
         self.stream = p.open(format=pyaudio.paInt16, channels=1, rate=sampling_rate, input=True,
                              frames_per_buffer=buffer_size)
         self.stream.start_stream()
-        super(PyAd, self).__init__()
+        # super(PyAd, self).__init__()
 
     def readinto(self, DATA):
         buf = self.stream.read(self.buffer_size)
