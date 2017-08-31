@@ -1,3 +1,6 @@
 pykka
 PyAudio
 pocketsphinx
+SpeechRecognition
+SpeechRecognition
+google-api-python-client
