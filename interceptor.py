@@ -22,7 +22,8 @@ class InterceptorActor(pykka.ThreadingActor):
         try:
 
             r = sr.Recognizer()
-            audio = r.listen(MicHack(self.mic))
+            with MicHack(self.mic) as michack:
+                audio = r.listen(michack)
             print("Google Speech Recognition thinks you said " + r.recognize_google(audio,
                                                                                     key="AIzaSyA97hSk7WuA-w4fCdHAK9h7LWEhiExb7do"))
         except sr.UnknownValueError:
