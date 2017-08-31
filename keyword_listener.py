@@ -18,6 +18,7 @@ class KeywordActor(pykka.ThreadingActor):
             dic=os.path.join(model_path, 'en-us/unity.dict'),
             keyphrase='UNITY',
             kws_threshold=1e+20)
+        print("kws inited")
         for phrase in ls:
             self.on_keyword()
 
