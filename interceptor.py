@@ -16,5 +16,5 @@ class InterceptorActor(pykka.ThreadingActor):
         p.wait()
 
     def on_receive(self, message):
-        if message["command"] == "keyword":
+        if message["command"] == "kw":
             self.on_keyword()
