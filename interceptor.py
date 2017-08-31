@@ -39,7 +39,7 @@ class InterceptorActor(pykka.ThreadingActor):
 
 
 class MicHack(sr.Microphone):
-    def __init__(self):
+    def __init__(self, mic):
         self.mic = mic
         super(MicHack, self).__init__()
 
