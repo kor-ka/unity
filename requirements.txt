@@ -1,0 +1,4 @@
+pykka
+SpeechRecognition
+PyAudio
+pocketsphinx
