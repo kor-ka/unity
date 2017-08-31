@@ -52,4 +52,3 @@ class MicHack(sr.Microphone):
             self.stream.close()
         finally:
             self.stream = None
-            self.audio.terminate()
