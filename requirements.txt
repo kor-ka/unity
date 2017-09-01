@@ -1,8 +1,7 @@
 pykka
 PyAudio
 pocketsphinx
-SpeechRecognition
-google-api-python-client
+google-cloud-speech
 pip
 setuptools
 wheel
