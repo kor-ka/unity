@@ -3,7 +3,7 @@
 import os
 from time import sleep
 
-from ls import LiveSpeech
+from lives_speech import LiveSpeech
 from manager import ManagerActor
 
 if __name__ == '__main__':

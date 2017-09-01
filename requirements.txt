@@ -3,3 +3,6 @@ PyAudio
 pocketsphinx
 SpeechRecognition
 google-api-python-client
+pip
+setuptools
+wheel
