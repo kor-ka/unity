@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "chipspeech-145813",
+  "private_key_id": "12906462a1ce92dfbd7582966ce51f723c89f51f",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC2zM+4DX8bFKIq\nU8q5XX73m8L+TOT4NvYvVmk7AaYsm0M7D4uyWFC2VojbSPMHBWnSrx34gir08JbV\n9OCevrc6zGYTBhghNuLlYXM9S47e8636tmr7tfVAowFdK3cdAS2WB+5NZfuY9OAo\nqglXOr0TtEELHVpG5o9YZ7gWpEVbEYXW2+CZdRoTF6cvtXg68JCPovadME1EZ8Eu\nPqGG300TL7iuJWSAVSrvYiYVBIp0GXTsh/HVc8fqqPJBzZbkQPXlYX7C/pbp6Ord\n/QcPsXzfZBm+ee+oqXFE4QRpFK78Z4B6swfiAqdTTEczT66uJb/kAMMjz3vgQSGf\nYqaLGgF5AgMBAAECggEACG8sbwm8YXOobyXc7C7qrU0JXbIO5ymjXpgblIaPyW4Z\nLNqbmk0l3YviQPqS2rI+vuL9PIVGVcqGAyA11E0+EgnynxJrFEPpNdEzFShtJ/n7\n/zM3KMmtTmABr5qnonXL9H4FhO+y1fddIl3aFCVt1OtpDDS8q28hkmAoEm9ePdnd\n3zWyMpTPjHYMy+KDHcIbb0LkjvAm4qoqQnllHo0tR96UvbePCGCQ1nBfLq5NmQfC\nK8x/3+LTi2T7REvHhdWjMU+ISqkNc9tVyRMXG4ocKQpCQlQoD9Z4ebh62sqfUrCN\n+4rbuSQYhpYOihpAaQj1UE0nIwGnn+5PzghCZgReyQKBgQDx4mzCWFrad7/ohJmt\nLS9O1OWsRCgIhjhs1HF29RytjeQmIBq1Z3UE0tMHcTafPB3CD9bybjWzRD53Ftvw\nbkdspD0CYj3R2rcJ5RT04ZSwn0kTWzOcNajFPkIF+NZ7k3Mt8a4xnBrKlwwG/Ptn\n158Vy/lunt7822WXKLPFGD7dXQKBgQDBd7V6pvLexjNyI/36eBWBj4ji9o3V9zpT\n4zFXGv+bcF4TWuU27TmBFEI5LTIlzc109MNP4g3brtLIm90FwEBA+QGyG2o5CcQs\ntX+2EoXb6f+RzXJJzGM0Zey0wrf2JUdKGm/sqnhD6ESAXyAKOY/ghdm+3jCETZKL\nGQAlkCPWzQKBgCTw+L1BszZ0XXnMbo/1O6lleGIz0o1iulFcrKuHScbzyalM8+dK\nkqOW8yXK05XEH6NYufIyhL8JKCUV96cjoILmHm8zw88+AQBg3S99GDFVUlrDbgFo\nbIsbNAgnddJPtaKJq5nmBm10XiDfGCJG2wQAL+sGFnY1p7FLRRFP36H9AoGARDc1\nYh3jnPE9yo0uTFZzHs/BcGWG9V7KzjFZgGEgp2ojgaeXEprqn7zI7OgmunWqcAat\np0kJoeAuqlVqxVBYV5B1LJvGBH6REUKd2VEGqdgEKSDLn4HVqPAXWlUeEEhsrpBL\nzqL87NTE8o6X+YL6XCxV7prheITxmuIhzxzXxjECgYEAi99Wb/qcqi2yaTKC1Ycp\nc4cSMFNgD7so1Ek15dB+9+mDpj5ICE0Jd0VaVrwdzJdSJiWRlGfeq0AT+vbuZ6Qq\nB9jITXchcLqTexkKHTDawb4cE4owvglcR/d6S7lb+ArsQjrKHKeJqhtJp6vEYLg2\nYn8Q8+bOpcN+tya3KFvMNVY=\n-----END PRIVATE KEY-----\n",
+  "client_email": "korka-325@chipspeech-145813.iam.gserviceaccount.com",
+  "client_id": "113368060297298506476",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/korka-325%40chipspeech-145813.iam.gserviceaccount.com"
+}
