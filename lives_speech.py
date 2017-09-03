@@ -41,7 +41,7 @@ class LiveSpeech(Pocketsphinx):
                     num_chars_printed = len(transcript)
                     count = count + 1
 
-                    self.process_raw(self.buf, self.no_search, self.full_utt)
+                    self.process_raw(buf, self.no_search, self.full_utt)
                     if self.keyphrase and self.hyp():
                         with self.end_utterance():
                             return
