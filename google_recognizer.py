@@ -15,18 +15,14 @@ RATE = 16000
 CHUNK = int(RATE / 10)  # 100ms
 
 
-
-
 class GoogleRecognizerActor(pykka.ThreadingActor):
-    def __init__(self, interceptor, mic_stream):
+    def __init__(self, interceptor):
         super(GoogleRecognizerActor, self).__init__()
         self.interceptor = interceptor
-        self.mic = mic_stream
         self.client = speech.SpeechClient()
 
     def on_receive(self, message):
         try:
-
             if message["command"] == "start":
                 self.start_recognize()
         except Exception as ex:

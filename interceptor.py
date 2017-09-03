@@ -9,7 +9,7 @@ class InterceptorActor(pykka.ThreadingActor):
     def __init__(self, manager, ls):
         super(InterceptorActor, self).__init__()
         self.ls = ls
-        self.rec = GoogleRecognizerActor.start(self.actor_ref, self.ls.get_mic())
+        self.rec = GoogleRecognizerActor.start(self.actor_ref)
         self.kw_detector = SphinxActor.start(self.actor_ref, self.ls)
         self.manager = manager
 
