@@ -65,6 +65,8 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         """
         num_chars_printed = 0
         for response in responses:
+            print("resp iter")
+
             if not response.results:
                 continue
 
