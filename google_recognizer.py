@@ -24,8 +24,12 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         self.client = speech.SpeechClient()
 
     def on_receive(self, message):
-        if message["command"] == "start":
-            self.start_recognize()
+        try:
+
+            if message["command"] == "start":
+                self.start_recognize()
+        except Exception as ex:
+            logging.exception(ex)
 
     def start_recognize(self):
         print("kw GoogleRecognizerActor")
@@ -41,7 +45,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
             config=config,
             interim_results=True)
 
-        with MicrophoneStream(self.mic) as stream:
+        with MicrophoneStream(RATE, CHUNK) as stream:
             audio_generator = stream.generator()
             requests = (types.StreamingRecognizeRequest(audio_content=content)
                         for content in audio_generator)
