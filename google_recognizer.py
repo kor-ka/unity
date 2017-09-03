@@ -2,6 +2,9 @@ import logging
 
 import pyaudio as pyaudio
 import pykka
+import sys
+
+import re
 from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
@@ -24,35 +27,76 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
             self.start_recognize()
 
     def start_recognize(self):
-        requests = (types.StreamingRecognizeRequest(audio_content=chunk)
-                    for chunk in MicrophoneStream(self.mic).generator())
+        self.listen_print_loop()
 
+        language_code = 'ru-RU'  # a BCP-47 language tag
+
+        client = speech.SpeechClient()
         config = types.RecognitionConfig(
             encoding=enums.RecognitionConfig.AudioEncoding.LINEAR16,
-            sample_rate_hertz=16000,
-            language_code='ru-RU')
-        streaming_config = types.StreamingRecognitionConfig(config=config)
+            sample_rate_hertz=RATE,
+            language_code=language_code)
+        streaming_config = types.StreamingRecognitionConfig(
+            config=config,
+            interim_results=True)
 
-        # streaming_recognize returns a generator.
-        responses = self.client.streaming_recognize(streaming_config, requests)
+        with MicrophoneStream(self.mic) as stream:
+            audio_generator = stream.generator()
+            requests = (types.StreamingRecognizeRequest(audio_content=content)
+                        for content in audio_generator)
 
+            responses = client.streaming_recognize(streaming_config, requests)
+
+            # Now, put the transcription responses to use.
+            self.listen_print_loop(responses)
+
+    def listen_print_loop(self, responses):
+        """Iterates through server responses and prints them.
+        The responses passed is a generator that will block until a response
+        is provided by the server.
+        Each response may contain multiple results, and each result may contain
+        multiple alternatives; for details, see https://goo.gl/tjCPAU.  Here we
+        print only the transcription for the top alternative of the top result.
+        In this case, responses are provided for interim results as well. If the
+        response is an interim one, print a line feed at the end of it, to allow
+        the next result to overwrite it, until the response is a final one. For the
+        final one, print a newline to preserve the finalized transcription.
+        """
+        num_chars_printed = 0
         for response in responses:
-            for result in response.results:
-                print('Finished: {}'.format(result.is_final))
-                print('Stability: {}'.format(result.stability))
-                alternatives = result.alternatives
-                for alternative in alternatives:
-                    print('Confidence: {}'.format(alternative.confidence))
-                    print('Transcript: {}'.format(alternative.transcript))
+            if not response.results:
+                continue
 
-                if result.is_final:
-                    print('End talk')
-                    break
+            # There could be multiple results in each response.
+            result = response.results[0]
+            if not result.alternatives:
+                continue
+
+            # Display the transcription of the top alternative.
+            transcript = result.alternatives[0].transcript
+
+            # Display interim results, but with a carriage return at the end of the
+            # line, so subsequent lines will overwrite them.
+            #
+            # If the previous result was longer than this one, we need to print
+            # some extra spaces to overwrite the previous result
+            overwrite_chars = ' ' * (num_chars_printed - len(transcript))
+
+            if not result.is_final:
+                sys.stdout.write(transcript + overwrite_chars + '\r')
+                sys.stdout.flush()
+
+                num_chars_printed = len(transcript)
+
             else:
-                continue  # executed if the loop ended normally (no break)
-            break  # executed if 'continue' was skipped (break)
+                print(transcript + overwrite_chars)
 
-            # self.interceptor.tell({"command":"talk", ""})
+                # Exit recognition if any of the transcribed phrases could be
+                # one of our keywords.
+                # if re.search(r'\b(exit|quit)\b', transcript, re.I):
+                print('Exiting..')
+                break
+
 
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
