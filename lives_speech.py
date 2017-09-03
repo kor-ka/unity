@@ -32,11 +32,16 @@ class LiveSpeech(Pocketsphinx):
             with self.start_utterance():
                 print("sphinx working...")
                 count = 0
-                count_len = 1
+                num_chars_printed = 0
                 for buf in ad.generator():
-                    sys.stdout.write("sphinx working {}".format(count) + count_len + '\r')
-                    count_len = str(count)
+                    transcript = "sphinx working {}".format(count)
+                    overwrite_chars = ' ' * (num_chars_printed - len(transcript))
+
+                    sys.stdout.write(transcript + overwrite_chars + '\r')
+                    sys.stdout.flush()
+                    num_chars_printed = len(transcript)
                     count = count + 1
+
                     self.process_raw(self.buf, self.no_search, self.full_utt)
                     if self.keyphrase and self.hyp():
                         with self.end_utterance():
