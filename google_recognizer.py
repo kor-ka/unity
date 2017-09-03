@@ -1,4 +1,5 @@
 import logging
+from pprint import pprint
 
 import pyaudio as pyaudio
 import pykka
@@ -65,7 +66,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         """
         num_chars_printed = 0
         for response in responses:
-            print("resp iter")
+            pprint(response)
 
             if not response.results:
                 continue
