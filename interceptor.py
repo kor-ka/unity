@@ -13,11 +13,11 @@ class InterceptorActor(pykka.ThreadingActor):
         self.manager = manager
 
     def on_keyword(self):
-        print("hi there")
-        args = []
-        args.insert(0, 'aplay')
-        args.insert(1, "../kw.waw")
-        subprocess.Popen(args)
+        print("kw InterceptorActor")
+        # args = []
+        # args.insert(0, 'aplay')
+        # args.insert(1, "../kw.waw")
+        # subprocess.Popen(args)
         self.rec.tell({"command":"start"})
 
 
