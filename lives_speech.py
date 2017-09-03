@@ -34,7 +34,7 @@ class LiveSpeech(Pocketsphinx):
                 count = 0
                 count_len = 1
                 for buf in ad.generator():
-                    sys.stdout.write("sphinx working " + count + count_len + '\r')
+                    sys.stdout.write("sphinx working {}".format(count) + count_len + '\r')
                     count_len = str(count)
                     count = count + 1
                     self.process_raw(self.buf, self.no_search, self.full_utt)
