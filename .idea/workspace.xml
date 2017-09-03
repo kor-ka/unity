@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="28154c45-285d-4e5b-b0c4-3f17cbee92d8" name="Default" comment="">
+    <list default="true" id="28154c45-285d-4e5b-b0c4-3f17cbee92d8" name="Default" comment="fix(gapi): yeld mix stream from google ex">
       <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/manager.py" afterPath="$PROJECT_DIR$/manager.py" />
     </list>
@@ -460,7 +460,14 @@
       <option name="project" value="LOCAL" />
       <updated>1504464729418</updated>
     </task>
-    <option name="localTasksCounter" value="24" />
+    <task id="LOCAL-00024" summary="fix(gapi): yeld mix stream from google ex">
+      <created>1504464749863</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1504464749863</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="ToolWindowManager">
