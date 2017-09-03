@@ -8,6 +8,11 @@ from manager import ManagerActor
 
 if __name__ == '__main__':
 
+
+    ls = LiveSpeech()
+    ls.detect()
+    print ("kw")
+
     manager = ManagerActor.start()
 
 

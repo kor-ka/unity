@@ -30,7 +30,6 @@ class LiveSpeech(Pocketsphinx):
     def detect(self):
         with MicrophoneStream(RATE, CHUNK) as ad:
             with self.start_utterance():
-                print("sphinx working...")
                 count = 0
                 num_chars_printed = 0
                 for buf in ad.generator():
