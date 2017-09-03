@@ -1,16 +1,18 @@
 import logging
+
+import os
 import pykka
 import subprocess
 
 from google_recognizer import GoogleRecognizerActor
+from lives_speech import LiveSpeech
 
 
 class InterceptorActor(pykka.ThreadingActor):
-    def __init__(self, manager, ls):
+    def __init__(self, manager):
         super(InterceptorActor, self).__init__()
-        self.ls = ls
         self.rec = GoogleRecognizerActor.start(self.actor_ref)
-        self.kw_detector = SphinxActor.start(self.actor_ref, self.ls)
+        self.kw_detector = SphinxActor.start(self.actor_ref)
         self.manager = manager
 
     def on_start(self):
@@ -36,7 +38,13 @@ class InterceptorActor(pykka.ThreadingActor):
 class SphinxActor(pykka.ThreadingActor):
     def __init__(self, interceptor, ls):
         super(SphinxActor, self).__init__()
-        self.ls = ls
+        model_path = "../pocketsphinx/model"
+        self.ls = LiveSpeech(
+            hmm=os.path.join(model_path, 'en-us/en-us'),
+            lm=os.path.join(model_path, 'en-us/en-us.lm.bin'),
+            dic=os.path.join(model_path, 'en-us/unity.dict'),
+            keyphrase='UNITY',
+            kws_threshold=1e+20)
         self.interceptor = interceptor
 
     def on_receive(self, message):
