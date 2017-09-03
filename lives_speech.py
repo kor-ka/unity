@@ -34,6 +34,7 @@ class LiveSpeech(Pocketsphinx):
                     self.process_raw(self.buf, self.no_search, self.full_utt)
                     if self.keyphrase and self.hyp():
                         with self.end_utterance():
+                            self.ad.stop()
                             return
 
     def stop(self, *args, **kwargs):
