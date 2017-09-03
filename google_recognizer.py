@@ -49,6 +49,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
 
             # Now, put the transcription responses to use.
             self.listen_print_loop(responses)
+            self.interceptor.tell({"command": "resume"})
 
     def listen_print_loop(self, responses):
         """Iterates through server responses and prints them.

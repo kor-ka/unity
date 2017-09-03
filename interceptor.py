@@ -6,11 +6,14 @@ from google_recognizer import GoogleRecognizerActor
 
 
 class InterceptorActor(pykka.ThreadingActor):
-    def __init__(self, manager, mic):
+    def __init__(self, manager, ls):
         super(InterceptorActor, self).__init__()
-        self.mic = mic
-        self.rec = GoogleRecognizerActor.start(self.actor_ref, self.mic)
+        self.ls = ls
+        self.rec = GoogleRecognizerActor.start(self.actor_ref, self.ls.get_mic())
         self.manager = manager
+
+    def on_start(self):
+        self.ls.detect()
 
     def on_keyword(self):
         print("kw InterceptorActor")
@@ -18,11 +21,11 @@ class InterceptorActor(pykka.ThreadingActor):
         # args.insert(0, 'aplay')
         # args.insert(1, "../kw.waw")
         # subprocess.Popen(args)
-        self.rec.tell({"command":"start"})
+        self.rec.tell({"command": "start"})
 
 
 
     def on_receive(self, message):
-        if message["command"] == "kw":
-            self.on_keyword()
+        if message["command"] == "resume":
+            self.ls.detect()
 

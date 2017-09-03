@@ -26,19 +26,13 @@ class LiveSpeech(Pocketsphinx):
 
         super(LiveSpeech, self).__init__(**kwargs)
 
-    def __iter__(self):
-        # with self.ad:
+    def detect(self):
             with self.start_utterance():
                 while self.ad.readinto(self.buf) >= 0:
                     self.process_raw(self.buf, self.no_search, self.full_utt)
                     if self.keyphrase and self.hyp():
                         with self.end_utterance():
-                            yield self
-                    elif self.in_speech != self.get_in_speech():
-                        self.in_speech = self.get_in_speech()
-                        if not self.in_speech and self.hyp():
-                            with self.end_utterance():
-                                yield self
+                            return
 
     def stop(self, *args, **kwargs):
         self.ad.stop()

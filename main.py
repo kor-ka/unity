@@ -15,9 +15,9 @@ if __name__ == '__main__':
         dic=os.path.join(model_path, 'en-us/unity.dict'),
         keyphrase='UNITY',
         kws_threshold=1e+20)
-    manager = ManagerActor.start(ls.get_mic())
+    manager = ManagerActor.start(ls)
 
     print("kws inited")
-    for phrase in ls:
-        print("kw detected")
-        manager.tell({"command":"kw"})
+
+    while True:
+        pass
