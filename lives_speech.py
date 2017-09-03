@@ -31,7 +31,6 @@ class LiveSpeech(Pocketsphinx):
             with self.start_utterance():
                 print("sphinx working...")
                 while self.ad.readinto(self.buf) >= 0:
-                    print(".")
                     self.process_raw(self.buf, self.no_search, self.full_utt)
                     if self.keyphrase and self.hyp():
                         with self.end_utterance():
