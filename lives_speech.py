@@ -48,17 +48,17 @@ class PyAd(Ad):
         self.sampling_rate = sampling_rate
         self.buffer_size = buffer_size
 
-        # super(PyAd, self).__init__()
-
-    def __enter__(self):
         p = pyaudio.PyAudio()
         self.stream = p.open(format=pyaudio.paInt16, channels=1, rate=sampling_rate, input=True,
                              frames_per_buffer=buffer_size)
+        # super(PyAd, self).__init__()
+
+    def __enter__(self):
+
         self.stream.start_stream()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.stream.stop_stream()
-        self.stream.close()
 
     def readinto(self, DATA):
         buf = self.stream.read(self.buffer_size, exception_on_overflow=False)
