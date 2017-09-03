@@ -12,7 +12,6 @@ CHUNK = int(RATE / 10)  # 100ms
 
 class LiveSpeech(Pocketsphinx):
     def __init__(self, **kwargs):
-        signal.signal(signal.SIGINT, self.stop)
 
         self.audio_device = kwargs.pop('audio_device', None)
         self.sampling_rate = kwargs.pop('sampling_rate', 16000)
