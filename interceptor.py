@@ -34,6 +34,9 @@ class InterceptorActor(pykka.ThreadingActor):
         if message["command"] == "kw":
             self.on_keyword()
 
+    def on_failure(self, exception_type, exception_value, traceback):
+        logging.exception(exception_value)
+
 
 class SphinxActor(pykka.ThreadingActor):
     def __init__(self, interceptor):
@@ -46,9 +49,14 @@ class SphinxActor(pykka.ThreadingActor):
             keyphrase='UNITY',
             kws_threshold=1e+20)
         self.interceptor = interceptor
+        print("ls created")
 
     def on_receive(self, message):
         if message["command"] == "detect":
+            print("on detect")
+
             self.ls.detect()
             self.interceptor.tell({"command": "kw"})
 
+    def on_failure(self, exception_type, exception_value, traceback):
+        logging.exception(exception_value)

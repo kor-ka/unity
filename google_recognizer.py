@@ -28,6 +28,10 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         except Exception as ex:
             logging.exception(ex)
 
+    def on_failure(self, exception_type, exception_value, traceback):
+        logging.exception(exception_value)
+
+
     def start_recognize(self):
         print("kw GoogleRecognizerActor")
 
