@@ -27,7 +27,6 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
             self.start_recognize()
 
     def start_recognize(self):
-        self.listen_print_loop()
 
         language_code = 'ru-RU'  # a BCP-47 language tag
 
