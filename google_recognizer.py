@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import logging
 from pprint import pprint
 
@@ -81,7 +82,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
                 continue
 
             # Display the transcription of the top alternative.
-            transcript = result.alternatives[0].transcript
+            transcript = unicode.result.alternatives[0].transcript.encode('utf-8').strip()
 
             # Display interim results, but with a carriage return at the end of the
             # line, so subsequent lines will overwrite them.
