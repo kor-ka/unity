@@ -17,7 +17,6 @@ if __name__ == '__main__':
         kws_threshold=1e+20)
     manager = ManagerActor.start(ls)
 
-    print("kws inited")
 
     while True:
         pass
