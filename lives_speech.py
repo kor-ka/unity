@@ -31,7 +31,12 @@ class LiveSpeech(Pocketsphinx):
         with MicrophoneStream(RATE, CHUNK) as ad:
             with self.start_utterance():
                 print("sphinx working...")
+                count = 0
+                count_len = 1
                 for buf in ad.generator():
+                    sys.stdout.write("sphinx working " + count + count_len + '\r')
+                    count_len = str(count)
+                    count = count + 1
                     self.process_raw(self.buf, self.no_search, self.full_utt)
                     if self.keyphrase and self.hyp():
                         with self.end_utterance():
