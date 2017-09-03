@@ -82,7 +82,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
                 continue
 
             # Display the transcription of the top alternative.
-            transcript = unicode.result.alternatives[0].transcript.encode('utf-8').strip()
+            transcript = result.alternatives[0].transcript.encode('utf-8').strip()
 
             # Display interim results, but with a carriage return at the end of the
             # line, so subsequent lines will overwrite them.
