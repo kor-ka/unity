@@ -24,7 +24,6 @@ class LiveSpeech(Pocketsphinx):
 
         self.in_speech = False
         self.buf = bytearray(self.buffer_size)
-        self.ad = PyAd(self.sampling_rate, buffer_size=self.buffer_size)
 
         super(LiveSpeech, self).__init__(**kwargs)
 
@@ -38,9 +37,6 @@ class LiveSpeech(Pocketsphinx):
                         with self.end_utterance():
                             return
 
-    def stop(self, *args, **kwargs):
-        self.ad.stop()
-        raise StopIteration
 
 
 class MicrophoneStream(object):
