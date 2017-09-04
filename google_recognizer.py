@@ -13,7 +13,7 @@ from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from six.moves import queue
-RATE = 40100
+RATE = 1024
 CHUNK = int(RATE / 10)  # 100ms
 
 
@@ -37,7 +37,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
     def start_recognize(self):
         print("kw GoogleRecognizerActor")
 
-        language_code = 'ru-RU'  # a BCP-47 language tag
+        language_code = 'en-US'  # a BCP-47 language tag
 
         client = speech.SpeechClient()
         config = types.RecognitionConfig(
