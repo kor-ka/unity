@@ -8,8 +8,8 @@ from sphinxbase import *
 from pocketsphinx import *
 from six.moves import queue
 
-RATE = 40100
-CHUNK = int(RATE / 10)  # 100ms
+RATE = 44000
+CHUNK = 1024  # 100ms
 
 class LiveSpeech(Pocketsphinx):
     def __init__(self, **kwargs):
