@@ -34,7 +34,7 @@ class LiveSpeech(Pocketsphinx):
                 num_chars_printed = 0
                 for buf in ad.generator():
                     volume_norm = audioop.max(buf, 2)
-                    count = "|" * (int(volume_norm) / 300)
+                    count = "|" * (int(volume_norm) / 1000)
                     transcript = "sphinx working {}".format(count)
                     overwrite_chars = ' ' * (num_chars_printed - len(transcript))
 
