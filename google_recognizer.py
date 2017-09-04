@@ -7,11 +7,13 @@ import pykka
 import sys
 
 import re
+
+import signal
 from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from six.moves import queue
-RATE = 16000
+RATE = 40100
 CHUNK = int(RATE / 10)  # 100ms
 
 
@@ -110,6 +112,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
     def __init__(self, rate, chunk):
+        signal.signal(signal.SIGINT, self.stop())
         self._rate = rate
         self._chunk = chunk
 
@@ -136,6 +139,9 @@ class MicrophoneStream(object):
         return self
 
     def __exit__(self, type, value, traceback):
+        self.stop()
+
+    def stop(self):
         self._audio_stream.stop_stream()
         self._audio_stream.close()
         self.closed = True
