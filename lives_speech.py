@@ -8,7 +8,7 @@ from sphinxbase import *
 from pocketsphinx import *
 from six.moves import queue
 
-RATE = 20000
+RATE = 40000
 CHUNK = 1024  # 100ms
 
 class LiveSpeech(Pocketsphinx):
