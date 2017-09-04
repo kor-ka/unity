@@ -3,8 +3,7 @@ import sys
 import signal
 from contextlib import contextmanager
 
-import numpy as np
-import pyaudio
+import pyaudio, audioop
 from sphinxbase import *
 from pocketsphinx import *
 from six.moves import queue
@@ -34,7 +33,7 @@ class LiveSpeech(Pocketsphinx):
                 progress = 0
                 num_chars_printed = 0
                 for buf in ad.generator():
-                    volume_norm = np.linalg.norm(buf) * 10
+                    volume_norm = audioop.max(buf, 2)
                     count = "|" * int(volume_norm)
                     transcript = "sphinx working {}".format(count)
                     overwrite_chars = ' ' * (num_chars_printed - len(transcript))
