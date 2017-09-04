@@ -13,7 +13,7 @@ from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from six.moves import queue
-RATE = 1024
+RATE = 18000
 CHUNK = int(RATE / 10)  # 100ms
 
 
