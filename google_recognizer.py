@@ -112,13 +112,14 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
     def __init__(self, rate, chunk):
-        signal.signal(signal.SIGINT, self.stop())
         self._rate = rate
         self._chunk = chunk
 
         # Create a thread-safe buffer of audio data
         self._buff = queue.Queue()
         self.closed = True
+        self._audio_stream = None
+        signal.signal(signal.SIGINT, self.stop())
 
     def __enter__(self):
         self._audio_interface = pyaudio.PyAudio()
