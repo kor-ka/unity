@@ -3,6 +3,7 @@ import sys
 import signal
 from contextlib import contextmanager
 
+import numpy as np
 import pyaudio
 from sphinxbase import *
 from pocketsphinx import *
@@ -30,16 +31,17 @@ class LiveSpeech(Pocketsphinx):
     def detect(self):
         with MicrophoneStream(RATE, CHUNK) as ad:
             with self.start_utterance():
-                count = 0
+                progress = 0
                 num_chars_printed = 0
                 for buf in ad.generator():
+                    volume_norm = np.linalg.norm(buf) * 10
+                    count = "|" * int(volume_norm)
                     transcript = "sphinx working {}".format(count)
                     overwrite_chars = ' ' * (num_chars_printed - len(transcript))
 
                     sys.stdout.write(transcript + overwrite_chars + '\r')
                     sys.stdout.flush()
                     num_chars_printed = len(transcript)
-                    count = count + 1
 
                     self.process_raw(buf, self.no_search, self.full_utt)
                     if self.keyphrase and self.hyp():
