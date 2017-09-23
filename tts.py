@@ -3,6 +3,8 @@ from gtts import gTTS
 
 
 def say(text):
+    if isinstance(text, unicode):
+        text = text.encode("utf8")
     tts = gTTS(text=text, lang='ru', slow=True)
     tts.save("speech.mp3")
 

@@ -1,3 +1,5 @@
+# coding=urf-8
+
 import logging
 
 import os
@@ -29,7 +31,7 @@ class InterceptorActor(pykka.ThreadingActor):
         # subprocess.Popen(args)
         res = self.rec.ask({"command": "start"})
         self.resolver.tell({"text": res})
-        tts.say("да да?")
+        tts.say(u"да да?")
 
 
     def on_receive(self, message):
