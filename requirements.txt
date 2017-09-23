@@ -5,3 +5,4 @@ google-cloud-speech
 pip
 setuptools
 wheel
+gtts
