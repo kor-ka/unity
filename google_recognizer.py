@@ -39,7 +39,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         print("kw GoogleRecognizerActor")
 
 
-        language_code = 'ru-RU'  # a BCP-47 language tag
+        language_code = 'en-En'  # a BCP-47 language tag
 
         client = speech.SpeechClient()
         config = types.RecognitionConfig(
