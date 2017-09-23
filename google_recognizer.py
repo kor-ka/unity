@@ -29,6 +29,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
                 return self.start_recognize()
         except Exception as ex:
             logging.exception(ex)
+            return ""
 
     def on_failure(self, exception_type, exception_value, traceback):
         logging.exception(exception_value)
@@ -36,6 +37,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
 
     def start_recognize(self):
         print("kw GoogleRecognizerActor")
+
 
         language_code = 'en-US'  # a BCP-47 language tag
 

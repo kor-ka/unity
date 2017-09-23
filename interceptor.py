@@ -4,6 +4,8 @@ import os
 import pykka
 import subprocess
 
+import tts
+from func_resolver import FuncResolverActor
 from google_recognizer import GoogleRecognizerActor
 from lives_speech import LiveSpeech
 
@@ -13,6 +15,7 @@ class InterceptorActor(pykka.ThreadingActor):
         super(InterceptorActor, self).__init__()
         self.rec = GoogleRecognizerActor.start(self.actor_ref)
         self.kw_detector = SphinxActor.start(self.actor_ref)
+        self.resolver = FuncResolverActor.start(self.actor_ref)
         self.manager = manager
 
     def on_start(self):
@@ -25,7 +28,8 @@ class InterceptorActor(pykka.ThreadingActor):
         # args.insert(1, "../kw.waw")
         # subprocess.Popen(args)
         res = self.rec.ask({"command": "start"})
-
+        self.resolver.tell({"text": res})
+        tts.say("да да?")
 
 
     def on_receive(self, message):
