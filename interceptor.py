@@ -30,8 +30,8 @@ class InterceptorActor(pykka.ThreadingActor):
         # args.insert(1, "../kw.waw")
         # subprocess.Popen(args)
         res = self.rec.ask({"command": "start"})
-        self.resolver.tell({"text": res})
         tts.say(u"да да?")
+        self.resolver.tell({"text": res})
 
 
     def on_receive(self, message):
