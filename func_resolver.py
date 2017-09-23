@@ -47,6 +47,8 @@ class LocalFunctions(pykka.ThreadingActor):
     def on_receive(self, message):
         if any(t in message["text"] for t in self.time_strings):
             self.on_time_ask()
+            return True
+        return False
 
     def on_time_ask(self):
         now = datetime.now()
