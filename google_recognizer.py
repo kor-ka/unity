@@ -26,7 +26,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
     def on_receive(self, message):
         try:
             if message["command"] == "start":
-                self.start_recognize()
+                return self.start_recognize()
         except Exception as ex:
             logging.exception(ex)
 
@@ -56,8 +56,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
             responses = client.streaming_recognize(streaming_config, requests)
 
             # Now, put the transcription responses to use.
-            self.listen_print_loop(responses)
-            self.interceptor.tell({"command": "resume"})
+            return self.listen_print_loop(responses)
 
     def listen_print_loop(self, responses):
         """Iterates through server responses and prints them.
@@ -71,6 +70,8 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         the next result to overwrite it, until the response is a final one. For the
         final one, print a newline to preserve the finalized transcription.
         """
+        print('G rec enabled, speak..')
+
         num_chars_printed = 0
         for response in responses:
             pprint(response)
@@ -107,6 +108,8 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
                 # if re.search(r'\b(exit|quit)\b', transcript, re.I):
                 print('Exiting..')
                 break
+
+            return transcript
 
 
 class MicrophoneStream(object):

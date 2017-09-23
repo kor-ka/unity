@@ -24,7 +24,7 @@ class InterceptorActor(pykka.ThreadingActor):
         # args.insert(0, 'aplay')
         # args.insert(1, "../kw.waw")
         # subprocess.Popen(args)
-        self.rec.tell({"command": "start"})
+        res = self.rec.ask({"command": "start"})
 
 
 
