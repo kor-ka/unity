@@ -3,9 +3,7 @@ from gtts import gTTS
 
 
 def say(text):
-    # if isinstance(text, unicode):
-    #     text = text.encode("utf8")
-    tts = gTTS(text=text, lang='ru', slow=True)
+    tts = gTTS(text=text, lang='ru', slow=False)
     tts.save("speech.mp3")
 
     args = []
