@@ -33,17 +33,17 @@ class LocalFunctions(pykka.ThreadingActor):
         self.time_strings = ["time", "врем"]
 
         i18n.add_translation('hour', {
-            'zero': 'часов',
-            'one': 'час',
-            'few': 'часа',
-            'many': 'часов'
+            'zero': u'часов',
+            'one': u'час',
+            'few': u'часа',
+            'many': u'часов'
         })
 
         i18n.add_translation('min', {
-            'zero': 'минут',
-            'one': 'минута',
-            'few': 'минуты',
-            'many': 'минут'
+            'zero': u'минут',
+            'one': u'минута',
+            'few': u'минуты',
+            'many': u'минут'
         })
 
         super(LocalFunctions, self).__init__()
