@@ -24,11 +24,16 @@ class LiveSpeech(Pocketsphinx):
 
         self.in_speech = False
         self.buf = bytearray(self.buffer_size)
+        self.ad = None
 
         super(LiveSpeech, self).__init__(**kwargs)
 
+    def stop(self):
+        self.ad.stop()
+
     def detect(self):
         with MicrophoneStream(RATE, CHUNK) as ad:
+            self.ad = ad
             with self.start_utterance():
                 progress = 0
                 num_chars_printed = 0
