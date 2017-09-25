@@ -124,6 +124,7 @@ class MicrophoneStream(object):
         self._buff = queue.Queue()
         self.closed = True
         signal.signal(signal.SIGTERM, self.stop())
+        signal.pause()
 
     def __enter__(self):
         self._audio_interface = pyaudio.PyAudio()
