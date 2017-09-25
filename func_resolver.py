@@ -5,6 +5,7 @@ import pykka
 
 import i18n
 
+
 import tts
 from google_recognizer import GoogleRecognizerActor
 
@@ -32,19 +33,21 @@ class LocalFunctions(pykka.ThreadingActor):
         self.interceptor = interceptor
         self.time_strings = ["time", "врем"]
 
+        i18n.set('fallback', 'en')
+
         i18n.add_translation('hour', {
             'zero': u'часов',
             'one': u'час',
             'few': u'часа',
             'many': u'часов'
-        })
+        }, locale='en')
 
         i18n.add_translation('min', {
             'zero': u'минут',
             'one': u'минута',
             'few': u'минуты',
             'many': u'минут'
-        })
+        }, locale='en')
 
         super(LocalFunctions, self).__init__()
 
