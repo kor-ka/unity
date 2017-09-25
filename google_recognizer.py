@@ -118,7 +118,6 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
                 return transcript
 
 
-
 class MicrophoneStream(object):
     """Opens a recording stream as a generator yielding the audio chunks."""
     def __init__(self, rate, chunk):
