@@ -13,7 +13,7 @@ def count_pick(count):
     if count == 0:
         return "zero"
     count_many = count % 100
-    if count > 100 and (10 < count_many < 15):
+    if 10 < count_many < 15:
         return "many"
 
     last_digit = count % 10
