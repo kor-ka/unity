@@ -129,7 +129,6 @@ class MicrophoneStream(object):
         # Create a thread-safe buffer of audio data
         self._buff = queue.Queue()
         self.closed = True
-        signal.pause()
 
     def __enter__(self):
         self._audio_interface = pyaudio.PyAudio()
