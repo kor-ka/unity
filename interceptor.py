@@ -6,6 +6,7 @@ import os
 import pykka
 import subprocess
 
+from func_resolver import FuncResolverActor
 from google_recognizer import GoogleRecognizerActor
 from lives_speech import LiveSpeech
 
@@ -15,6 +16,7 @@ class InterceptorActor(pykka.ThreadingActor):
         super(InterceptorActor, self).__init__()
         self.rec = GoogleRecognizerActor.start(self.actor_ref)
         self.kw_detector = SphinxActor.start(self.actor_ref)
+        self.resolver = FuncResolverActor.start(self.actor_ref)
         self.manager = manager
 
     def on_start(self):
@@ -22,11 +24,8 @@ class InterceptorActor(pykka.ThreadingActor):
 
     def on_keyword(self):
         print("kw InterceptorActor")
-        # args = []
-        # args.insert(0, 'aplay')
-        # args.insert(1, "../kw.waw")
-        # subprocess.Popen(args)
-        self.rec.tell({"command": "start"})
+        res = self.rec.tell({"command": "start"})
+        self.resolver.tell({"text": res})
 
 
 
