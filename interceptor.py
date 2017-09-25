@@ -39,6 +39,10 @@ class InterceptorActor(pykka.ThreadingActor):
             self.kw_detector.tell({"command": "detect"})
         if message["command"] == "kw":
             self.on_keyword()
+        if message["command"] == "term":
+            self.rec.tell(message)
+            self.kw_detector.tell(message)
+            self.resolver.tell(message)
 
     def on_failure(self, exception_type, exception_value, traceback):
         logging.exception(exception_value)
@@ -63,6 +67,8 @@ class SphinxActor(pykka.ThreadingActor):
 
             self.ls.detect()
             self.interceptor.tell({"command": "kw"})
+        elif message["command"] == "term":
+            self.ls.stop()
 
     def on_failure(self, exception_type, exception_value, traceback):
         logging.exception(exception_value)
