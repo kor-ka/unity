@@ -123,7 +123,7 @@ class MicrophoneStream(object):
         # Create a thread-safe buffer of audio data
         self._buff = queue.Queue()
         self.closed = True
-        signal.signal(signal.SIGTERM, self.stop())
+        signal.signal(signal.SIGTERM, self.stop)
         signal.pause()
 
     def __enter__(self):
