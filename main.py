@@ -13,7 +13,7 @@ from manager import ManagerActor
 
 if __name__ == '__main__':
 
-    def term():
+    def term(arg1, arg2):
         manager.tell({"command": "term"})
 
 
