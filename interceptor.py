@@ -24,7 +24,7 @@ class InterceptorActor(pykka.ThreadingActor):
 
     def on_keyword(self):
         print("kw InterceptorActor")
-        res = self.rec.tell({"command": "start"})
+        res = self.rec.ask({"command": "start"})
         self.resolver.tell({"text": res})
 
 
