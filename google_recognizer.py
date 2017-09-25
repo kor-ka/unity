@@ -14,7 +14,7 @@ from google.cloud.speech import enums
 from google.cloud.speech import types
 from six.moves import queue
 RATE = 16000
-CHUNK = 1024  # 100ms
+CHUNK = int(RATE / 10)  # 100ms
 
 
 class GoogleRecognizerActor(pykka.ThreadingActor):
