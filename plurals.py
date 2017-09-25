@@ -6,7 +6,7 @@ def add(key, plurals):
 
 
 def t(key, count):
-    pl.get(key).get(count_pick(count))
+    return pl.get(key).get(count_pick(count))
 
 
 def count_pick(count):
