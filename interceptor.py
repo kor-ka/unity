@@ -6,9 +6,6 @@ import os
 import pykka
 import subprocess
 
-import flags
-import tts
-from func_resolver import FuncResolverActor
 from google_recognizer import GoogleRecognizerActor
 from lives_speech import LiveSpeech
 
@@ -18,17 +15,10 @@ class InterceptorActor(pykka.ThreadingActor):
         super(InterceptorActor, self).__init__()
         self.rec = GoogleRecognizerActor.start(self.actor_ref)
         self.kw_detector = SphinxActor.start(self.actor_ref)
-        # self.resolver = FuncResolverActor.start(self.actor_ref)
         self.manager = manager
 
     def on_start(self):
-        self.detect()
-
-    def detect(self):
-        if flags.debug:
-            self.actor_ref.tell({"command": "kw"})
-        else:
-            self.kw_detector.tell({"command": "detect"})
+        self.kw_detector.tell({"command": "detect"})
 
     def on_keyword(self):
         print("kw InterceptorActor")
@@ -36,21 +26,15 @@ class InterceptorActor(pykka.ThreadingActor):
         # args.insert(0, 'aplay')
         # args.insert(1, "../kw.waw")
         # subprocess.Popen(args)
-        tts.say(" да?")
-        res = self.rec.ask({"command": "start"})
-        self.detect()
-        # self.resolver.tell({"text": res})
+        self.rec.tell({"command": "start"})
+
 
 
     def on_receive(self, message):
         if message["command"] == "resume":
-            self.detect()
+            self.kw_detector.tell({"command": "detect"})
         if message["command"] == "kw":
             self.on_keyword()
-        if message["command"] == "term":
-            self.rec.tell(message)
-            self.kw_detector.tell(message)
-            self.resolver.tell(message)
 
     def on_failure(self, exception_type, exception_value, traceback):
         logging.exception(exception_value)
@@ -75,8 +59,6 @@ class SphinxActor(pykka.ThreadingActor):
 
             self.ls.detect()
             self.interceptor.tell({"command": "kw"})
-        elif message["command"] == "term":
-            self.ls.stop()
 
     def on_failure(self, exception_type, exception_value, traceback):
         logging.exception(exception_value)

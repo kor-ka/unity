@@ -8,15 +8,15 @@ from sphinxbase import *
 from pocketsphinx import *
 from six.moves import queue
 
-RATE = 16000
-CHUNK = int(RATE / 10)  # 100ms
+RATE = 22000
+CHUNK = 1024  # 100ms
 
 class LiveSpeech(Pocketsphinx):
     def __init__(self, **kwargs):
 
         self.audio_device = kwargs.pop('audio_device', None)
-        self.sampling_rate = kwargs.pop('sampling_rate', RATE)
-        self.buffer_size = kwargs.pop('buffer_size', CHUNK)
+        self.sampling_rate = kwargs.pop('sampling_rate', 22000)
+        self.buffer_size = kwargs.pop('buffer_size', 1024)
         self.no_search = kwargs.pop('no_search', False)
         self.full_utt = kwargs.pop('full_utt', False)
 
@@ -24,16 +24,11 @@ class LiveSpeech(Pocketsphinx):
 
         self.in_speech = False
         self.buf = bytearray(self.buffer_size)
-        self.ad = None
 
         super(LiveSpeech, self).__init__(**kwargs)
 
-    def stop(self):
-        self.ad.stop()
-
     def detect(self):
         with MicrophoneStream(RATE, CHUNK) as ad:
-            self.ad = ad
             with self.start_utterance():
                 progress = 0
                 num_chars_printed = 0
