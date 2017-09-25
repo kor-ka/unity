@@ -19,7 +19,8 @@ class FuncResolverActor(pykka.ThreadingActor):
             # TODO resolve bot, start T session
             tts.say(u" не понимаю")
 
-            self.interceptor.tell({"command": "resume"})
+        self.interceptor.tell({"command": "resume"})
+
 
 
 class LocalFunctions(pykka.ThreadingActor):
@@ -51,9 +52,4 @@ class LocalFunctions(pykka.ThreadingActor):
 
     def on_time_ask(self):
         now = datetime.now()
-
         tts.say(u" Cейчас {} {} {} {}".format(now.hour, i18n.t('hour', count=now.hour), now.minute, i18n.t('min', count=now.minute)))
-        self.end_session()
-
-    def end_session(self):
-        self.interceptor.tell({"command": "resume"})
