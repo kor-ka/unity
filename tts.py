@@ -7,7 +7,7 @@ import flags
 
 
 def say(text):
-    if flags.debug:
+    if not flags.debug:
 
         tts = gTTS(text=text, lang='ru', slow=False)
         tts.save("speech.mp3")
