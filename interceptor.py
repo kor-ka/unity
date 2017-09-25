@@ -11,6 +11,7 @@ from func_resolver import FuncResolverActor
 from google_recognizer import GoogleRecognizerActor
 from lives_speech import LiveSpeech
 
+debug = True
 
 class InterceptorActor(pykka.ThreadingActor):
     def __init__(self, manager):
@@ -21,7 +22,13 @@ class InterceptorActor(pykka.ThreadingActor):
         self.manager = manager
 
     def on_start(self):
-        self.kw_detector.tell({"command": "detect"})
+        self.detect()
+
+    def detect(self):
+        if debug:
+            self.actor_ref.tell({"command": "kw"})
+        else:
+            self.kw_detector.tell({"command": "detect"})
 
     def on_keyword(self):
         print("kw InterceptorActor")
@@ -36,7 +43,7 @@ class InterceptorActor(pykka.ThreadingActor):
 
     def on_receive(self, message):
         if message["command"] == "resume":
-            self.kw_detector.tell({"command": "detect"})
+            self.detect()
         if message["command"] == "kw":
             self.on_keyword()
         if message["command"] == "term":

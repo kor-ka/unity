@@ -1,4 +1,6 @@
 import subprocess
+
+import time
 from gtts import gTTS
 
 
@@ -10,3 +12,4 @@ def say(text):
     args.insert(0, 'mpg123')
     args.insert(1, "speech.mp3")
     subprocess.Popen(args).wait()
+    time.sleep(1)
