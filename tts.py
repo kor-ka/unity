@@ -18,4 +18,6 @@ def say(text):
         subprocess.Popen(args).wait()
         time.sleep(1)
     else:
+        print(text)
+        time.sleep(3)
         pass
