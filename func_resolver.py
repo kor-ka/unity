@@ -17,7 +17,7 @@ class FuncResolverActor(pykka.ThreadingActor):
     def on_receive(self, message):
         if not self.local.ask(message):
             # TODO resolve bot, start T session
-            tts.say(u" не понимаю")
+            tts.say(" не понимаю")
 
             self.interceptor.tell({"command": "resume"})
 
