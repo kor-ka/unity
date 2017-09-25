@@ -25,7 +25,6 @@ class FuncResolverActor(pykka.ThreadingActor):
 class LocalFunctions(pykka.ThreadingActor):
     def __init__(self, interceptor):
         self.interceptor = interceptor
-        self.rec = GoogleRecognizerActor.start(self.actor_ref)
         self.time_strings = ["time", "врем"]
 
         i18n.add_translation('hour', {
