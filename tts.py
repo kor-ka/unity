@@ -7,6 +7,6 @@ def say(text):
     tts.save("speech.mp3")
 
     args = []
-    args.insert(0, 'mplayer')
+    args.insert(0, 'mpg123')
     args.insert(1, "speech.mp3")
     subprocess.Popen(args).wait()

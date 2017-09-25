@@ -13,7 +13,7 @@ from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from six.moves import queue
-RATE = 22000
+RATE = 16000
 CHUNK = 1024  # 100ms
 
 
@@ -39,7 +39,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         print("kw GoogleRecognizerActor")
 
 
-        language_code = 'en-US'  # a BCP-47 language tag
+        language_code = 'ru-RU'  # a BCP-47 language tag
 
         client = speech.SpeechClient()
         config = types.RecognitionConfig(
@@ -123,6 +123,7 @@ class MicrophoneStream(object):
         # Create a thread-safe buffer of audio data
         self._buff = queue.Queue()
         self.closed = True
+        signal.signal(signal.SIGTERM, self.stop())
 
     def __enter__(self):
         self._audio_interface = pyaudio.PyAudio()
