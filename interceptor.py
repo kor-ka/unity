@@ -6,12 +6,12 @@ import os
 import pykka
 import subprocess
 
+import flags
 import tts
 from func_resolver import FuncResolverActor
 from google_recognizer import GoogleRecognizerActor
 from lives_speech import LiveSpeech
 
-debug = True
 
 class InterceptorActor(pykka.ThreadingActor):
     def __init__(self, manager):
@@ -25,7 +25,7 @@ class InterceptorActor(pykka.ThreadingActor):
         self.detect()
 
     def detect(self):
-        if debug:
+        if flags.debug:
             self.actor_ref.tell({"command": "kw"})
         else:
             self.kw_detector.tell({"command": "detect"})

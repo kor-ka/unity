@@ -115,9 +115,8 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
                 # one of our keywords.
                 # if re.search(r'\b(exit|quit)\b', transcript, re.I):
                 print('Exiting..')
-                break
+                return transcript
 
-            return transcript
 
 
 class MicrophoneStream(object):
