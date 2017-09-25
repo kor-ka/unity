@@ -8,12 +8,18 @@ import signal
 from lives_speech import LiveSpeech
 from manager import ManagerActor
 
+
+
+
 if __name__ == '__main__':
+
+    def term():
+        manager.tell({"command": "term"})
 
 
     manager = ManagerActor.start()
-    # signal.signal(signal.SIGINT, manager.tell({"command":"term"}))
-    # signal.signal(signal.SIGTERM, manager.tell({"command":"term"}))
+    signal.signal(signal.SIGINT, term)
+    signal.signal(signal.SIGTERM, term)
 
 
     while True:
