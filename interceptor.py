@@ -18,7 +18,7 @@ class InterceptorActor(pykka.ThreadingActor):
         super(InterceptorActor, self).__init__()
         self.rec = GoogleRecognizerActor.start(self.actor_ref)
         self.kw_detector = SphinxActor.start(self.actor_ref)
-        self.resolver = FuncResolverActor.start(self.actor_ref)
+        # self.resolver = FuncResolverActor.start(self.actor_ref)
         self.manager = manager
 
     def on_start(self):
@@ -38,7 +38,8 @@ class InterceptorActor(pykka.ThreadingActor):
         # subprocess.Popen(args)
         tts.say(" да?")
         res = self.rec.ask({"command": "start"})
-        self.resolver.tell({"text": res})
+        self.detect()
+        # self.resolver.tell({"text": res})
 
 
     def on_receive(self, message):
