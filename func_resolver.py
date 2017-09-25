@@ -1,4 +1,5 @@
 # coding=utf-8
+import logging
 from datetime import datetime
 import pykka
 
@@ -20,6 +21,9 @@ class FuncResolverActor(pykka.ThreadingActor):
             tts.say(u" не понимаю")
 
         self.interceptor.tell({"command": "resume"})
+
+    def on_failure(self, exception_type, exception_value, traceback):
+        logging.exception(exception_value)
 
 
 
