@@ -51,12 +51,14 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
             config=config,
             interim_results=True)
 
+        print (self.mic._buff.size)
         audio_generator = self.mic.generator()
         requests = (types.StreamingRecognizeRequest(audio_content=content)
                     for content in audio_generator)
 
         responses = client.streaming_recognize(streaming_config, requests)
 
+        print(self.mic.qsize())
         res = self.listen_print_loop(responses)
         self.mic.pause_clear()
         return res
