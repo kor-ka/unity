@@ -5,19 +5,17 @@ from time import sleep
 
 import signal
 
-from lives_speech import LiveSpeech
 from manager import ManagerActor
-
-
-
+from mic_stream import MicrophoneStream
 
 if __name__ == '__main__':
 
+    mic = MicrophoneStream()
+
     def term(arg1, arg2):
-        manager.tell({"command": "term"})
+        mic.stop()
 
-
-    manager = ManagerActor.start()
+    manager = ManagerActor.start(mic)
     signal.signal(signal.SIGINT, term)
     signal.signal(signal.SIGTERM, term)
 

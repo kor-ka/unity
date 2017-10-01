@@ -12,10 +12,10 @@ from lives_speech import LiveSpeech
 
 
 class InterceptorActor(pykka.ThreadingActor):
-    def __init__(self, manager):
+    def __init__(self, manager, mic):
         super(InterceptorActor, self).__init__()
-        self.rec = GoogleRecognizerActor.start(self.actor_ref)
-        self.kw_detector = SphinxActor.start(self.actor_ref)
+        self.rec = GoogleRecognizerActor.start(self.actor_ref, mic)
+        self.kw_detector = SphinxActor.start(self.actor_ref, mic)
         self.resolver = FuncResolverActor.start(self.actor_ref)
         self.manager = manager
 
@@ -26,8 +26,6 @@ class InterceptorActor(pykka.ThreadingActor):
         print("kw InterceptorActor")
         res = self.rec.ask({"command": "start"})
         self.resolver.tell({"text": res})
-
-
 
     def on_receive(self, message):
         if message["command"] == "resume":
@@ -40,15 +38,15 @@ class InterceptorActor(pykka.ThreadingActor):
 
 
 class SphinxActor(pykka.ThreadingActor):
-    def __init__(self, interceptor):
+    def __init__(self, mic, interceptor):
         super(SphinxActor, self).__init__()
         model_path = "../pocketsphinx/model"
-        self.ls = LiveSpeech(
-            hmm=os.path.join(model_path, 'en-us/en-us'),
-            lm=os.path.join(model_path, 'en-us/en-us.lm.bin'),
-            dic=os.path.join(model_path, 'en-us/unity.dict'),
-            keyphrase='UNITY',
-            kws_threshold=1e+20)
+        self.ls = LiveSpeech(mic,
+                             hmm=os.path.join(model_path, 'en-us/en-us'),
+                             lm=os.path.join(model_path, 'en-us/en-us.lm.bin'),
+                             dic=os.path.join(model_path, 'en-us/unity.dict'),
+                             keyphrase='UNITY',
+                             kws_threshold=1e+20)
         self.interceptor = interceptor
         print("ls created")
 
