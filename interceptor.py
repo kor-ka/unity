@@ -38,7 +38,7 @@ class InterceptorActor(pykka.ThreadingActor):
 
 
 class SphinxActor(pykka.ThreadingActor):
-    def __init__(self, mic, interceptor):
+    def __init__(self, interceptor, mic):
         super(SphinxActor, self).__init__()
         model_path = "../pocketsphinx/model"
         self.ls = LiveSpeech(mic,
