@@ -76,12 +76,12 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         the next result to overwrite it, until the response is a final one. For the
         final one, print a newline to preserve the finalized transcription.
         """
-        once = True
+        if self.tell:
+            tts.say(self.tell)
+
         num_chars_printed = 0
         for response in responses:
-            if once and self.tell:
-                once = False
-                tts.say(self.tell)
+
             pprint(response)
 
             if not response.results:
