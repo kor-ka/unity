@@ -13,6 +13,7 @@ from google.cloud import speech
 from google.cloud.speech import enums
 from google.cloud.speech import types
 from six.moves import queue
+import tts
 RATE = 22000
 CHUNK = 1024  # 100ms
 
@@ -23,8 +24,9 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         self.interceptor = interceptor
         self.client = speech.SpeechClient()
         self.mic = mic
+        self.tell = None
 
-        language_code = 'en-US'  # a BCP-47 language tag
+        language_code = 'ru-RU'  # a BCP-47 language tag
 
         self.client = speech.SpeechClient()
         config = types.RecognitionConfig(
@@ -38,6 +40,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
     def on_receive(self, message):
         try:
             if message["command"] == "start":
+                self.tell = message["tell"]
                 return self.start_recognize()
 
         except Exception as ex:
@@ -51,15 +54,11 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
     def start_recognize(self):
         print("kw GoogleRecognizerActor")
 
-        print(self.mic.qsize())
-
         audio_generator = self.mic.generator()
         requests = (types.StreamingRecognizeRequest(audio_content=content)
                     for content in audio_generator)
 
         responses = self.client.streaming_recognize(self.streaming_config, requests)
-
-        print(self.mic.qsize())
 
         res = self.listen_print_loop(responses)
         self.mic.pause_clear()
@@ -77,10 +76,12 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         the next result to overwrite it, until the response is a final one. For the
         final one, print a newline to preserve the finalized transcription.
         """
-        print('G rec enabled, speak..')
-
+        once = True
         num_chars_printed = 0
         for response in responses:
+            if once and self.tell:
+                once = False
+                tts.say(self.tell)
             pprint(response)
 
             if not response.results:
