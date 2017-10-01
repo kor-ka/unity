@@ -43,7 +43,7 @@ class MicrophoneStream(object):
     def pause_clear(self):
         self.paused = True
         with self._buff.mutex:
-            self._buff.queue.clear_pause()
+            self._buff.queue.clear()
 
     def _fill_buffer(self, in_data, frame_count, time_info, status_flags):
         """Continuously collect data from the audio stream, into the buffer."""
