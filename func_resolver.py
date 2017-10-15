@@ -19,7 +19,9 @@ class FuncResolverActor(pykka.ThreadingActor):
     def on_receive(self, message):
         if not self.local.ask(message):
             # TODO resolve bot remotely
-            if re.match(r"^(скажи|tell)(.*)", message["text"], re.UNICODE):
+            echo_strings = ["скажи", "tell"]
+
+            if any(t in message["text"] for t in echo_strings):
                 message.add("bot", "uproar")
                 message.add("command", "ask")
                 self.t_client.tell(message)
