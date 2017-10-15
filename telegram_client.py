@@ -27,7 +27,7 @@ class TelegramClient(pykka.ThreadingActor):
             self.client = client
             self.connect(client)
             if not client.is_user_authorized():
-                res = self.rec.ask({"command": "start", "tell": u"с м с"})
+                res = input("sms code:")
                 client.sign_in(phone=phone)
                 self.me = client.sign_in(code=int(res.replace(" ", "")))
             client.add_update_handler(lambda update: self.actor_ref.tell(update))
