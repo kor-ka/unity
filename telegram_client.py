@@ -13,14 +13,14 @@ class TelegramClient(pykka.ThreadingActor):
         self.interceptor = interceptor
         self.rec = rec
         self.me = None
-        self.client = None # type: telethon.TelegramClient
+        self.client = None  # type: telethon.TelegramClient
         super(TelegramClient, self).__init__()
 
     def on_start(self):
         self.try_login()
 
     def on_t_update(self, update):
-        self.actor_ref.tell(update)
+        self.actor_ref.tell({"command": "update", "update": update})
 
     def try_login(self):
         try:
@@ -51,9 +51,10 @@ class TelegramClient(pykka.ThreadingActor):
             self.connect(client)
 
     def on_receive(self, message):
-        if isinstance(message, UpdateShortMessage):
-            if self.get_user(message).bot and not message.out:
-                self.on_update(message)
+        if message["command"] == "update":
+            update_ = message["update"]
+            if isinstance(update_, UpdateShortMessage) and self.get_user(update_).bot and not message.out:
+                self.on_update(update_)
         elif message["command"] == "ask":
             self.client.send_message(message["bot"], message["text"])
             # TODO handle conversations
