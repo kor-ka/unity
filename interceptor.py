@@ -9,6 +9,7 @@ import subprocess
 from func_resolver import FuncResolverActor
 from google_recognizer import GoogleRecognizerActor
 from lives_speech import LiveSpeech
+from telegram_client import TelegramClient
 
 
 class InterceptorActor(pykka.ThreadingActor):
@@ -17,10 +18,8 @@ class InterceptorActor(pykka.ThreadingActor):
         self.rec = GoogleRecognizerActor.start(self.actor_ref, mic)
         self.kw_detector = SphinxActor.start(self.actor_ref, mic)
         self.resolver = FuncResolverActor.start(self.actor_ref)
+        self.t_client = TelegramClient.start(self.actor_ref)
         self.manager = manager
-
-    def on_start(self):
-        self.kw_detector.tell({"command": "detect"})
 
     def on_keyword(self):
         print("kw InterceptorActor")
@@ -32,6 +31,8 @@ class InterceptorActor(pykka.ThreadingActor):
             self.kw_detector.tell({"command": "detect"})
         if message["command"] == "kw":
             self.on_keyword()
+        if message["command"] == "detect":
+            self.kw_detector.tell(message)
 
     def on_failure(self, exception_type, exception_value, traceback):
         logging.exception(exception_value)

@@ -31,6 +31,7 @@ class TelegramClient(pykka.ThreadingActor):
                 client.sign_in(phone=phone)
                 self.me = client.sign_in(code=int(res.replace(" ", "")))
             client.add_update_handler(lambda update: self.actor_ref.tell(update))
+            self.interceptor.tell({"command": "detect"})
         except:
             self.try_login()
 
