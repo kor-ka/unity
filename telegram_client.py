@@ -20,7 +20,6 @@ class TelegramClient(pykka.ThreadingActor):
         self.try_login()
 
     def on_t_update(self, update):
-        print(update)
         self.actor_ref.tell(update)
 
     def try_login(self):
@@ -29,7 +28,7 @@ class TelegramClient(pykka.ThreadingActor):
             api_hash = '37f844e27d26693944bc229d8f9dd751'
             phone = '+79992191629'
             print("t login")
-            client = telethon.TelegramClient('session_name', api_id, api_hash, update_workers=1)
+            client = telethon.TelegramClient('session_name', api_id, api_hash, update_workers=4)
             self.client = client
             self.connect(client)
             if not client.is_user_authorized():
