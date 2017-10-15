@@ -14,7 +14,7 @@ def say(text):
 
         PyAudio = pyaudio.PyAudio
         RATE = 16000
-        data = ''.join([chr(x * 0) for x in xrange(RATE)])
+        data = ''
         p = PyAudio()
 
         stream = p.open(format=
