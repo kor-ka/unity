@@ -22,8 +22,8 @@ def say(text):
                         channels=1,
                         rate=RATE,
                         output=True)
-        for DISCARD in xrange(5):
-            stream.write(data)
+
+        stream.write(data)
         stream.stop_stream()
         stream.close()
         p.terminate()
