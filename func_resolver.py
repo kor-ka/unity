@@ -10,8 +10,9 @@ from google_recognizer import GoogleRecognizerActor
 
 
 class FuncResolverActor(pykka.ThreadingActor):
-    def __init__(self, interceptor):
+    def __init__(self, interceptor, t_client):
         self.interceptor = interceptor
+        self.t_client = t_client
         self.local = LocalFunctions.start(interceptor)
         super(FuncResolverActor, self).__init__()
 
@@ -21,6 +22,7 @@ class FuncResolverActor(pykka.ThreadingActor):
             if re.match("^скажи|^tell", message["text"]):
                 message.add("bot", "uproar")
                 message.add("command", "ask")
+                self.t_client.tell(message)
                 return
             tts.say(u" не понимаю")
 
