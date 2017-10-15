@@ -19,6 +19,9 @@ class TelegramClient(pykka.ThreadingActor):
     def on_start(self):
         self.try_login()
 
+    def on_t_update(self, update):
+        self.actor_ref.tell(update)
+
     def try_login(self):
         try:
             api_id = 194070
@@ -32,7 +35,7 @@ class TelegramClient(pykka.ThreadingActor):
                 client.send_code_request(phone)
                 client.sign_in(phone=phone)
                 self.me = client.sign_in(code=int(input("Enter code:")))
-            client.add_update_handler(lambda update: self.actor_ref.tell(update))
+            client.add_update_handler(self.on_t_update)
             self.interceptor.tell({"command": "detect"})
         except Exception as e:
             logging.exception(e)
