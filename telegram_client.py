@@ -25,7 +25,7 @@ class TelegramClient(pykka.ThreadingActor):
             api_hash = '37f844e27d26693944bc229d8f9dd751'
             phone = '+79992191629'
             print("t login")
-            client = TelegramClient('session_name', api_id, api_hash)
+            client = telethon.TelegramClient('session_name', api_id, api_hash)
             self.client = client
             self.connect(client)
             if not client.is_user_authorized():
@@ -35,7 +35,7 @@ class TelegramClient(pykka.ThreadingActor):
             client.add_update_handler(lambda update: self.actor_ref.tell(update))
             self.interceptor.tell({"command": "detect"})
         except Exception as e:
-            logging.exception(e)
+            logging.exception(e )
             # self.try_login()
 
     def on_failure(self, exception_type, exception_value, traceback):
