@@ -35,8 +35,8 @@ class TelegramClient(pykka.ThreadingActor):
             client.add_update_handler(lambda update: self.actor_ref.tell(update))
             self.interceptor.tell({"command": "detect"})
         except Exception as e:
-            logging.exception(e )
-            # self.try_login()
+            logging.exception(e)
+            self.try_login()
 
     def on_failure(self, exception_type, exception_value, traceback):
         logging.exception(exception_value)
