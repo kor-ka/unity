@@ -22,7 +22,7 @@ class FuncResolverActor(pykka.ThreadingActor):
             echo_strings = ["скажи", "tell"]
 
             if any(t in message["text"] for t in echo_strings):
-                message.update({"bot": "uproar", "command": "ask"})
+                message.update({"bot": "uproarbot", "command": "ask"})
                 self.t_client.tell(message)
                 return
             tts.say(u" не понимаю")
