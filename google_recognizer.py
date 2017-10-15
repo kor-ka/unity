@@ -93,17 +93,17 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
                 continue
 
             # Display the transcription of the top alternative.
-            transcript = result.alternatives[0].transcript.encode('utf-8').strip()
+            transcript = result.alternatives[0].transcript
 
             # Display interim results, but with a carriage return at the end of the
             # line, so subsequent lines will overwrite them.
             #
             # If the previous result was longer than this one, we need to print
             # some extra spaces to overwrite the previous result
-            overwrite_chars = (' ' * (num_chars_printed - len(transcript))).encode('utf-8').strip()
+            overwrite_chars = ' ' * (num_chars_printed - len(transcript))
 
             if not result.is_final:
-                sys.stdout.write((transcript + overwrite_chars + '\r'.encode('utf-8').strip()).decode('utf-8'))
+                sys.stdout.write(transcript + overwrite_chars + '\r')
                 sys.stdout.flush()
 
                 num_chars_printed = len(transcript)
