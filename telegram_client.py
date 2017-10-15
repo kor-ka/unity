@@ -48,12 +48,11 @@ class TelegramClient(pykka.ThreadingActor):
             self.connect(client)
 
     def on_receive(self, message):
-        usr = self.get_user(message)
-        if isinstance(message, UpdateShortMessage) and not message.out and usr.bot:
+        if isinstance(message, UpdateShortMessage) and not message.out and self.get_user(message).bot:
             self.on_update(message)
         elif message["command"] == "ask":
             self.client.send_message(self.get_user(message["bot"]), message["text"])
-            #TODO handle conversations
+            # TODO handle conversations
             self.interceptor.tell({"command": "resume"})
 
     def get_user(self, message):
