@@ -18,7 +18,7 @@ class InterceptorActor(pykka.ThreadingActor):
         self.rec = GoogleRecognizerActor.start(self.actor_ref, mic)
         self.kw_detector = SphinxActor.start(self.actor_ref, mic)
         self.resolver = FuncResolverActor.start(self.actor_ref)
-        self.t_client = TelegramClient.start(self.actor_ref)
+        self.t_client = TelegramClient.start(self.actor_ref, self.rec)
         self.manager = manager
 
     def on_keyword(self):
