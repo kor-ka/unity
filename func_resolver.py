@@ -21,7 +21,7 @@ class FuncResolverActor(pykka.ThreadingActor):
             # TODO resolve bot remotely
             echo_strings = ["скажи", "tell"]
 
-            if any(t in message["text"] for t in echo_strings):
+            if message and any(t in message["text"] for t in echo_strings):
                 message.update({"bot": "uproarbot", "command": "ask"})
                 self.t_client.tell(message)
                 return
@@ -56,11 +56,11 @@ class LocalFunctions(pykka.ThreadingActor):
         super(LocalFunctions, self).__init__()
 
     def on_receive(self, message):
-        if any(t in message["text"] for t in self.time_strings):
+        if message and any(t in message["text"] for t in self.time_strings):
             self.on_time_ask()
             return True
 
-        if any(t in message["text"] for t in self.exit_strings):
+        if message and any(t in message["text"] for t in self.exit_strings):
             quit()
             return True
         return False

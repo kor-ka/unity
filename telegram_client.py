@@ -29,7 +29,7 @@ class TelegramClient(pykka.ThreadingActor):
             api_hash = '37f844e27d26693944bc229d8f9dd751'
             phone = '+79992191629'
             print("t login")
-            client = telethon.TelegramClient('session_name', api_id, api_hash)
+            client = telethon.TelegramClient('session_name', api_id, api_hash, update_workers=1)
             self.client = client
             self.connect(client)
             if not client.is_user_authorized():
