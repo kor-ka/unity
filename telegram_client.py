@@ -18,7 +18,7 @@ class TelegramClient(pykka.ThreadingActor):
         self.try_login()
 
     def try_login(self):
-        try:
+        # try:
             api_id = 194070
             api_hash = '37f844e27d26693944bc229d8f9dd751'
             phone = '+79992191629'
@@ -32,8 +32,8 @@ class TelegramClient(pykka.ThreadingActor):
                 self.me = client.sign_in(code=int(res.replace(" ", "")))
             client.add_update_handler(lambda update: self.actor_ref.tell(update))
             self.interceptor.tell({"command": "detect"})
-        except:
-            self.try_login()
+        # except:
+        #     self.try_login()
 
     def connect(self, client):
         try:
