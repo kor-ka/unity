@@ -29,9 +29,9 @@ class TelegramClient(pykka.ThreadingActor):
             self.client = client
             self.connect(client)
             if not client.is_user_authorized():
-                res = input("sms code:")
+                client.send_code_request(phone)
                 client.sign_in(phone=phone)
-                self.me = client.sign_in(code=int(res.replace(" ", "")))
+                self.me = client.sign_in(code=int(input("Enter code:")))
             client.add_update_handler(lambda update: self.actor_ref.tell(update))
             self.interceptor.tell({"command": "detect"})
         except Exception as e:
