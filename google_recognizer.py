@@ -103,7 +103,7 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
             overwrite_chars = (' ' * (num_chars_printed - len(transcript))).encode('utf-8').strip()
 
             if not result.is_final:
-                sys.stdout.write(transcript + overwrite_chars + '\r'.encode('utf-8').strip())
+                sys.stdout.write((transcript + overwrite_chars + '\r'.encode('utf-8').strip()).decode('utf-8'))
                 sys.stdout.flush()
 
                 num_chars_printed = len(transcript)
