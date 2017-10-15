@@ -1,7 +1,7 @@
 import pyaudio
 from six.moves import queue
 
-RATE = 22000
+RATE = 17000
 CHUNK = 1024  # 100ms
 
 
