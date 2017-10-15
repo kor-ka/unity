@@ -1,4 +1,3 @@
-i18n
 pykka
 PyAudio
 pocketsphinx
@@ -7,4 +6,4 @@ pip
 setuptools
 wheel
 gtts
-python-i18n
+telethon

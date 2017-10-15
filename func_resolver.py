@@ -18,8 +18,10 @@ class FuncResolverActor(pykka.ThreadingActor):
     def on_receive(self, message):
         if not self.local.ask(message):
             # TODO resolve bot remotely
-            if re.match("^погода|^weather", message["text"]):
-                pass
+            if re.match("^скажи|^tell", message["text"]):
+                message.add("bot", "uproar")
+                message.add("command", "ask")
+                return
             tts.say(u" не понимаю")
 
         self.interceptor.tell({"command": "resume"})
