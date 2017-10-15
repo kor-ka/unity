@@ -29,6 +29,7 @@ class LocalFunctions(pykka.ThreadingActor):
     def __init__(self, interceptor):
         self.interceptor = interceptor
         self.time_strings = ["time", "врем"]
+        self.exit_strings = ["exit", "quit", "terminate", "выход", "пока"]
 
         plurals.add('hour', {
             'zero': u'часов',
@@ -49,6 +50,10 @@ class LocalFunctions(pykka.ThreadingActor):
     def on_receive(self, message):
         if any(t in message["text"] for t in self.time_strings):
             self.on_time_ask()
+            return True
+
+        if any(t in message["text"] for t in self.exit_strings):
+            quit()
             return True
         return False
 
