@@ -2,6 +2,8 @@
 import subprocess
 
 import time
+
+import pyaudio
 from gtts import gTTS
 
 import flags
@@ -9,6 +11,22 @@ import flags
 
 def say(text):
     if not flags.debug:
+
+        PyAudio = pyaudio.PyAudio
+        RATE = 16000
+        data = ''.join([chr(x * 0) for x in xrange(RATE)])
+        p = PyAudio()
+
+        stream = p.open(format=
+                        p.get_format_from_width(1),
+                        channels=1,
+                        rate=RATE,
+                        output=True)
+        for DISCARD in xrange(5):
+            stream.write(data)
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
 
         tts = gTTS(text=text, lang='ru', slow=False)
         tts.save("speech.mp3")
