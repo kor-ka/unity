@@ -1,3 +1,5 @@
+import logging
+
 import pykka
 import telethon
 from telethon import TelegramClient
@@ -34,6 +36,9 @@ class TelegramClient(pykka.ThreadingActor):
             self.interceptor.tell({"command": "detect"})
         # except:
         #     self.try_login()
+
+    def on_failure(self, exception_type, exception_value, traceback):
+        logging.exception(exception_value)
 
     def connect(self, client):
         try:
