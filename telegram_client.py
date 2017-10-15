@@ -20,6 +20,7 @@ class TelegramClient(pykka.ThreadingActor):
         self.try_login()
 
     def on_t_update(self, update):
+        print(update)
         self.actor_ref.tell(update)
 
     def try_login(self):
