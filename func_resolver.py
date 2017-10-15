@@ -5,6 +5,7 @@ import pykka
 
 import plurals
 import tts
+import re
 from google_recognizer import GoogleRecognizerActor
 
 
@@ -16,7 +17,9 @@ class FuncResolverActor(pykka.ThreadingActor):
 
     def on_receive(self, message):
         if not self.local.ask(message):
-            # TODO resolve bot, start T session
+            # TODO resolve bot remotely
+            if re.match("^погода|^weather", message["text"]):
+                pass
             tts.say(u" не понимаю")
 
         self.interceptor.tell({"command": "resume"})
