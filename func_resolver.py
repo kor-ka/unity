@@ -3,19 +3,17 @@ import json
 import logging
 from datetime import datetime
 import pykka
-from apiai import apiai
 
 import plurals
 import tts
-import re
-from google_recognizer import GoogleRecognizerActor
+
+from apiai.text import TextRequest
 
 
 class FuncResolverActor(pykka.ThreadingActor):
     def __init__(self, interceptor, t_client):
         self.interceptor = interceptor
         self.t_client = t_client
-        self.ai = apiai.ApiAI("78d0cdf68bd8449cb6fcdde8d0b0cd02")
 
         self.local = LocalFunctions.start(interceptor)
         super(FuncResolverActor, self).__init__()
@@ -23,7 +21,13 @@ class FuncResolverActor(pykka.ThreadingActor):
     def on_receive(self, message):
         if not self.local.ask(message):
 
-            request = self.ai.text_request()
+            request = TextRequest(
+                "78d0cdf68bd8449cb6fcdde8d0b0cd02",
+                'api.api.ai',
+                '20150910',
+                None
+            )
+
             request.lang = 'ru'  # optional, default value equal 'en'
             request.session_id = self.t_client.ask({"command": "me"}).id
             request.query = message["text"]
@@ -36,7 +40,6 @@ class FuncResolverActor(pykka.ThreadingActor):
                     self.t_client.tell(message)
                     return
 
-            # fallback
             echo_strings = ["скажи", "tell"]
 
             if message and any(t in message["text"] for t in echo_strings):

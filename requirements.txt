@@ -7,4 +7,3 @@ setuptools
 wheel
 gtts
 telethon
-apiai
