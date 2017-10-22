@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from . import QueryRequest
 
 import json
+
+from apiai.query import QueryRequest
 
 
 class TextRequest(QueryRequest):
