@@ -31,9 +31,12 @@ class FuncResolverActor(pykka.ThreadingActor):
             if response.code // 100 == 2:
                 string = response.read().decode('utf-8')
                 res = json.loads(string)
-                res["result"]["action"].spl
+                if res["result"]["action"]:
+                    message.update({"command": "ask", 'bot': str.split(res["result"]["action"], ".")[0]})
+                    self.t_client.tell(message)
+                    return
 
-
+            # fallback
             echo_strings = ["скажи", "tell"]
 
             if message and any(t in message["text"] for t in echo_strings):
