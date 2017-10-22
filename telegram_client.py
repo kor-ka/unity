@@ -60,6 +60,9 @@ class TelegramClient(pykka.ThreadingActor):
             self.client.send_message(message["bot"], message["text"])
             # TODO handle conversations
             self.interceptor.tell({"command": "resume"})
+        elif message["command"] == 'me':
+            return self.client.get_me()
+
 
     # def get_user(self, message):
     #     usr = next(filter(lambda e: isinstance(e, User), message.entities))
