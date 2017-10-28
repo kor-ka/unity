@@ -6,7 +6,7 @@ import pykka
 import telethon
 import time
 from telethon import TelegramClient
-from telethon.tl.types import UpdateShortMessage, User, Chat, InputPeerChat
+from telethon.tl.types import UpdateShortMessage, User, Chat, InputPeerChat, UpdateShortChatMessage
 
 import tts
 import shelve
@@ -44,6 +44,7 @@ class TelegramClient(pykka.ThreadingActor):
                 client.sign_in(phone=phone)
                 self.me = client.sign_in(code=int(input("Enter code:")))
             client.add_update_handler(self.on_t_update)
+
             self.interceptor.tell({"command": "detect"})
         except Exception as e:
             logging.exception(e)
@@ -62,7 +63,7 @@ class TelegramClient(pykka.ThreadingActor):
         if message["command"] == "update":
             update_ = message["update"]
             # and self.get_user(update_).bot
-            if isinstance(update_, UpdateShortMessage) and not update_.out:
+            if isinstance(update_, (UpdateShortMessage, UpdateShortChatMessage), ):
                 self.on_update(update_)
         elif message["command"] == "ask":
             if self.chat_id:
