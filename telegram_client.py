@@ -86,7 +86,9 @@ class TelegramClient(pykka.ThreadingActor):
         upd = update  # type: UpdateShortMessage
         message = upd.message
 
-        if message == '#here':
+        print(message)
+
+        if message.startswith('#here'):
             print("here")
             for e in upd.entities:
                 print(e)
