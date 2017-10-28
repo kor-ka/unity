@@ -1,19 +1,27 @@
 import logging
+from threading import Thread
+import uuid
 
 import pykka
 import telethon
+import time
 from telethon import TelegramClient
-from telethon.tl.types import UpdateShortMessage, User
+from telethon.tl.types import UpdateShortMessage, User, Chat, InputPeerChat
 
 import tts
+import shelve
 
 
 class TelegramClient(pykka.ThreadingActor):
     def __init__(self, interceptor, rec):
+        db = shelve.open("chat_id")
+        self.chat_id = db["chat_id"]
+        db.close()
         self.interceptor = interceptor
         self.rec = rec
         self.me = None
         self.client = None  # type: telethon.TelegramClient
+        self.going_to_resume = uuid.uuid4()
         super(TelegramClient, self).__init__()
 
     def on_start(self):
@@ -56,13 +64,13 @@ class TelegramClient(pykka.ThreadingActor):
             # and self.get_user(update_).bot
             if isinstance(update_, UpdateShortMessage) and not update_.out:
                 self.on_update(update_)
-        elif message["command"] == "ask":
-            self.client.send_message(message["bot"], message["text"])
-            # TODO handle conversations
-            self.interceptor.tell({"command": "resume"})
+        elif message["command"] == "ask" and self.chat_id:
+            self.client.send_message(InputPeerChat(self.chat_id), message["text"])
+            self.delayed_resume()
         elif message["command"] == 'me':
             return self.client.get_me()
-
+        elif message["command"] == 'resume' and self.going_to_resume == message["latest"]:
+            self.interceptor.tell({"command": "resume"})
 
     # def get_user(self, message):
     #     usr = next(filter(lambda e: isinstance(e, User), message.entities))
@@ -70,5 +78,38 @@ class TelegramClient(pykka.ThreadingActor):
 
     def on_update(self, update):
         upd = update  # type: UpdateShortMessage
-        if upd.message and len(upd.message) > 0:
-            tts.say(upd.message)
+        message = upd.message
+
+        if message == '#here':
+            for e in upd.entities:
+                if isinstance(e, Chat):
+                    self.chat_id = e.id
+                    db = shelve.open("chat_id")
+                    db["chat_id"] = self.chat_id
+                    db.close()
+
+        user = self.client.get_entity(upd.user_id)  # type: User
+        if message and len(message) > 0 and not upd.out and user.bot:
+
+            if update.message.endswith('?'):
+                reply = self.rec.ask({"command": "ask", "tell": message})
+                if reply and len(reply) > 0:
+                    self.client.send_message(InputPeerChat(self.chat_id), message["text"])
+                    self.delayed_resume()
+                else:
+                    self.delayed_resume(delay=1)
+
+            else:
+                tts.say(message)
+                self.delayed_resume(delay=1)
+
+    def delayed_resume(self, delay=10):
+        latest = uuid.uuid4()
+        self.going_to_resume = latest
+
+        def delayed():
+            time.sleep(delay)
+            self.actor_ref.tell({"command": "resume", "latest": latest})
+
+        thread = Thread(target=delayed, args=(10,))
+        thread.start()

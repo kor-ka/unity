@@ -7,9 +7,6 @@ import pykka
 import plurals
 import tts
 
-from apiai.text import TextRequest
-
-
 class FuncResolverActor(pykka.ThreadingActor):
     def __init__(self, interceptor, t_client):
         self.interceptor = interceptor
@@ -21,38 +18,8 @@ class FuncResolverActor(pykka.ThreadingActor):
     def on_receive(self, message):
         if not self.local.ask(message):
 
-            request = TextRequest(
-                "78d0cdf68bd8449cb6fcdde8d0b0cd02",
-                'api.api.ai',
-                '20150910',
-                None
-            )
-
-            request.lang = 'ru'  # optional, default value equal 'en'
-            request.session_id = self.t_client.ask({"command": "me"}).id
-            request.query = message["text"]
-            response = request.getresponse()
-
-            # resolved from api ai
-            if response.code // 100 == 2:
-                string = response.read().decode('utf-8')
-                res = json.loads(string)
-                action = res["result"]["action"]
-                # has action
-                if action:
-                    # say smth
-                    if action == "input.unknown":
-                        tts.say(res["result"]["fulfillment"]["speech"])
-                        self.interceptor.tell({"command": "resume"})
-                        return
-
-                    # pick bot, continue handle by bot
-                    bot_name = str.split(action, ".")[0]
-                    if action.startswith("smalltalk"):
-                        bot_name = "uproarbot"
-                    message.update({"command": "ask", 'bot': bot_name})
-                    self.t_client.tell(message)
-                    return
+            message.update({"command": "ask"})
+            self.t_client.tell(message)
 
             echo_strings = ["скажи", "tell"]
 
