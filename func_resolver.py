@@ -7,6 +7,7 @@ import pykka
 import plurals
 import tts
 
+
 class FuncResolverActor(pykka.ThreadingActor):
     def __init__(self, interceptor, t_client):
         self.interceptor = interceptor
@@ -17,17 +18,9 @@ class FuncResolverActor(pykka.ThreadingActor):
 
     def on_receive(self, message):
         if not self.local.ask(message):
-
             message.update({"command": "ask"})
             self.t_client.tell(message)
-
-            echo_strings = ["скажи", "tell"]
-
-            if message and any(t in message["text"] for t in echo_strings):
-                message.update({"bot": "uproarbot", "command": "ask"})
-                self.t_client.tell(message)
-                return
-            tts.say(u" не понимаю")
+            return
 
         self.interceptor.tell({"command": "resume"})
 
