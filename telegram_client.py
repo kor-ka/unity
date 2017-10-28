@@ -15,7 +15,7 @@ import shelve
 class TelegramClient(pykka.ThreadingActor):
     def __init__(self, interceptor, rec):
         db = shelve.open("chat_id")
-        self.chat_id = None if not  db.has_key("chat_id") else db["chat_id"]
+        self.chat_id = None if "chat_id" not in db else db["chat_id"]
         db.close()
         self.interceptor = interceptor
         self.rec = rec
