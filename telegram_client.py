@@ -64,13 +64,19 @@ class TelegramClient(pykka.ThreadingActor):
             # and self.get_user(update_).bot
             if isinstance(update_, UpdateShortMessage) and not update_.out:
                 self.on_update(update_)
-        elif message["command"] == "ask" and self.chat_id:
-            self.client.send_message(InputPeerChat(self.chat_id), message["text"])
-            self.delayed_resume()
+        elif message["command"] == "ask":
+            if self.chat_id:
+                self.client.send_message(InputPeerChat(self.chat_id), message["text"])
+                self.delayed_resume()
+            else:
+                self.interceptor.tell({"command": "resume"})
+
         elif message["command"] == 'me':
             return self.client.get_me()
-        elif message["command"] == 'resume' and self.going_to_resume == message["latest"]:
-            self.interceptor.tell({"command": "resume"})
+        elif message["command"] == 'resume':
+            print("on resume" + self.going_to_resume + " vs " + message["latest"])
+            if self.going_to_resume == message["latest"]:
+                self.interceptor.tell({"command": "resume"})
 
     # def get_user(self, message):
     #     usr = next(filter(lambda e: isinstance(e, User), message.entities))
@@ -81,7 +87,9 @@ class TelegramClient(pykka.ThreadingActor):
         message = upd.message
 
         if message == '#here':
+            print("here")
             for e in upd.entities:
+                print(e)
                 if isinstance(e, Chat):
                     self.chat_id = e.id
                     db = shelve.open("chat_id")
@@ -105,9 +113,11 @@ class TelegramClient(pykka.ThreadingActor):
 
     def delayed_resume(self, delay=10):
         latest = uuid.uuid4()
+        print("delayed_resume " + latest)
         self.going_to_resume = latest
 
         def delayed():
+            print("delayed_resume threaded " + latest)
             time.sleep(delay)
             self.actor_ref.tell({"command": "resume", "latest": latest})
 
