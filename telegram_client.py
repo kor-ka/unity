@@ -106,9 +106,8 @@ class TelegramClient(pykka.ThreadingActor):
 
         user = self.client.get_entity(user_id)  # type: User
         if message and len(message) > 0 and not upd.out and user.bot:
-
             if update.message.endswith('?'):
-                reply = self.rec.ask({"command": "ask", "tell": message})
+                reply = self.rec.ask({"command": "start", "tell": message})
                 if reply and len(reply) > 0:
                     self.client.send_message(InputPeerChat(self.chat_id), message["text"])
                     self.delayed_resume()
@@ -127,7 +126,7 @@ class TelegramClient(pykka.ThreadingActor):
         def delayed():
             print("delayed_resume threaded " + str(latest))
             time.sleep(delay)
-            self.actor_ref.tell({"command": "resume", "latest": str(latest)})
+            self.actor_ref.tell({"command": "resume", "latest": latest})
 
         thread = Thread(target=delayed)
         thread.start()
