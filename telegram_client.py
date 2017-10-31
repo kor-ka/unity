@@ -84,7 +84,11 @@ class TelegramClient(pykka.ThreadingActor):
     #     return usr
 
     def on_update(self, update):
-        upd = update  # type: UpdateShortMessage
+        if isinstance(update, UpdateShortChatMessage):
+            upd = update  # type: UpdateShortChatMessage
+        else:
+            upd = update  # type: UpdateShortMessage
+
         message = upd.message
 
         print(message)
@@ -99,7 +103,8 @@ class TelegramClient(pykka.ThreadingActor):
                     db["chat_id"] = self.chat_id
                     db.close()
 
-        user = self.client.get_entity(upd.user_id)  # type: User
+        user_id = upd.from_id if isinstance(upd, UpdateShortChatMessage) else upd.user_id
+        user = self.client.get_entity(user_id)  # type: User
         if message and len(message) > 0 and not upd.out and user.bot:
 
             if update.message.endswith('?'):
