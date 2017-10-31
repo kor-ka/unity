@@ -84,26 +84,26 @@ class TelegramClient(pykka.ThreadingActor):
     #     return usr
 
     def on_update(self, update):
+
         if isinstance(update, UpdateShortChatMessage):
             upd = update  # type: UpdateShortChatMessage
+            chat_id = upd.chat_id
+            user_id = upd.from_id
         else:
             upd = update  # type: UpdateShortMessage
+            chat_id = upd.user_id
+            user_id = upd.user_id
 
         message = upd.message
 
         print(message)
 
         if message.startswith('#here'):
-            print("here")
-            for e in upd.entities:
-                print(e)
-                if isinstance(e, Chat):
-                    self.chat_id = e.id
-                    db = shelve.open("chat_id")
-                    db["chat_id"] = self.chat_id
-                    db.close()
+            self.chat_id = chat_id
+            db = shelve.open("chat_id")
+            db["chat_id"] = chat_id
+            db.close()
 
-        user_id = upd.from_id if isinstance(upd, UpdateShortChatMessage) else upd.user_id
         user = self.client.get_entity(user_id)  # type: User
         if message and len(message) > 0 and not upd.out and user.bot:
 
