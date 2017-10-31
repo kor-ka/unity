@@ -120,8 +120,8 @@ class TelegramClient(pykka.ThreadingActor):
                 self.delayed_resume(delay=1)
 
     def delayed_resume(self, delay=10):
-        latest = uuid.uuid4()
-        print("delayed_resume " + latest)
+        latest = uuid.uuid1()
+        print("delayed_resume " + latest.hex)
         self.going_to_resume = latest
 
         def delayed():
