@@ -75,7 +75,7 @@ class TelegramClient(pykka.ThreadingActor):
         elif message["command"] == 'me':
             return self.client.get_me()
         elif message["command"] == 'resume':
-            print("on resume" + self.going_to_resume + " vs " + message["latest"])
+            print("on resume" + str(self.going_to_resume) + " vs " + str(message["latest"]))
             if self.going_to_resume == message["latest"]:
                 self.interceptor.tell({"command": "resume"})
 
@@ -121,13 +121,13 @@ class TelegramClient(pykka.ThreadingActor):
 
     def delayed_resume(self, delay=10):
         latest = uuid.uuid1()
-        print("delayed_resume " + latest)
+        print("delayed_resume " + str(latest))
         self.going_to_resume = latest
 
         def delayed():
-            print("delayed_resume threaded " + latest)
+            print("delayed_resume threaded " + str(latest))
             time.sleep(delay)
-            self.actor_ref.tell({"command": "resume", "latest": latest})
+            self.actor_ref.tell({"command": "resume", "latest": str(latest)})
 
         thread = Thread(target=delayed)
         thread.start()
