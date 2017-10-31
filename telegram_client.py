@@ -129,5 +129,5 @@ class TelegramClient(pykka.ThreadingActor):
             time.sleep(delay)
             self.actor_ref.tell({"command": "resume", "latest": latest})
 
-        thread = Thread(target=delayed, args=(10,))
+        thread = Thread(target=delayed)
         thread.start()
