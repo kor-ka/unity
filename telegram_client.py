@@ -109,7 +109,7 @@ class TelegramClient(pykka.ThreadingActor):
             if update.message.endswith('?'):
                 reply = self.rec.ask({"command": "start", "tell": message})
                 if reply and len(reply) > 0:
-                    self.client.send_message(InputPeerChat(self.chat_id), message["text"])
+                    self.client.send_message(InputPeerChat(self.chat_id), reply)
                     self.delayed_resume()
                 else:
                     self.delayed_resume(delay=1)
