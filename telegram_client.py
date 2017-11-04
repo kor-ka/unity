@@ -1,15 +1,15 @@
 import logging
-from threading import Thread
+import shelve
+import time
 import uuid
+from threading import Thread
 
 import pykka
 import telethon
-import time
 from telethon import TelegramClient
-from telethon.tl.types import UpdateShortMessage, User, Chat, InputPeerChat, UpdateShortChatMessage
+from telethon.tl.types import UpdateShortMessage, User, InputPeerChat, UpdateShortChatMessage
 
 import tts
-import shelve
 
 
 class TelegramClient(pykka.ThreadingActor):

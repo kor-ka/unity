@@ -41,6 +41,9 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         try:
             if message["command"] == "start":
                 self.tell = message["tell"]
+                if self.tell:
+                    tts.say(self.tell)
+
                 return self.start_recognize()
 
         except Exception as ex:
@@ -76,8 +79,6 @@ class GoogleRecognizerActor(pykka.ThreadingActor):
         the next result to overwrite it, until the response is a final one. For the
         final one, print a newline to preserve the finalized transcription.
         """
-        if self.tell:
-            tts.say(self.tell)
 
         num_chars_printed = 0
         for response in responses:
