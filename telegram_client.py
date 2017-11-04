@@ -60,24 +60,28 @@ class TelegramClient(pykka.ThreadingActor):
             self.connect(client)
 
     def on_receive(self, message):
-        if message["command"] == "update":
-            update_ = message["update"]
-            # and self.get_user(update_).bot
-            if isinstance(update_, (UpdateShortMessage, UpdateShortChatMessage), ):
-                self.on_update(update_)
-        elif message["command"] == "ask":
-            if self.chat_id:
-                self.client.send_message(InputPeerChat(self.chat_id), message["text"])
-                self.delayed_resume()
-            else:
-                self.interceptor.tell({"command": "resume"})
+        try:
 
-        elif message["command"] == 'me':
-            return self.client.get_me()
-        elif message["command"] == 'resume':
-            print("on resume" + str(self.going_to_resume) + " vs " + str(message["latest"]))
-            if self.going_to_resume == message["latest"]:
-                self.interceptor.tell({"command": "resume"})
+            if message["command"] == "update":
+                update_ = message["update"]
+                # and self.get_user(update_).bot
+                if isinstance(update_, (UpdateShortMessage, UpdateShortChatMessage), ):
+                    self.on_update(update_)
+            elif message["command"] == "ask":
+                if self.chat_id:
+                    self.delayed_resume()
+                    self.client.send_message(InputPeerChat(self.chat_id), message["text"])
+                else:
+                    self.interceptor.tell({"command": "resume"})
+
+            elif message["command"] == 'me':
+                return self.client.get_me()
+            elif message["command"] == 'resume':
+                print("on resume" + str(self.going_to_resume) + " vs " + str(message["latest"]))
+                if self.going_to_resume == message["latest"]:
+                    self.interceptor.tell({"command": "resume"})
+        except Exception as ex:
+            logging.exception(ex)
 
     # def get_user(self, message):
     #     usr = next(filter(lambda e: isinstance(e, User), message.entities))
