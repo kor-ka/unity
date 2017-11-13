@@ -103,10 +103,10 @@ class TelegramClient(pykka.ThreadingActor):
             chat_id = upd.user_id
             user_id = upd.user_id
         else:
-            upd = update.message  # type: UpdateNewChannelMessage
+            upd = message  # type: UpdateNewChannelMessage
             chat_id = get_peer_id(upd.message.from_id)
             user_id = upd.message.from_id
-            message = upd.message.message
+            message = message.message
 
 
         print(message)
