@@ -61,7 +61,7 @@ class TelegramClient(pykka.ThreadingActor):
 
     def on_receive(self, message):
         try:
-
+            print(message)
             if message["command"] == "update":
                 update_ = message["update"]
                 # and self.get_user(update_).bot
