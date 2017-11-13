@@ -27,8 +27,8 @@ class LiveSpeech(Pocketsphinx):
 
         self.ad = mic
         self.utterance = self.start_utterance()
-        self.utterance.__enter__(self)
         super(LiveSpeech, self).__init__(**kwargs)
+        self.utterance.__enter__()
 
     def detect(self):
         num_chars_printed = 0
