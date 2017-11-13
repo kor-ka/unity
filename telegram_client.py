@@ -9,6 +9,7 @@ import telethon
 from telethon import TelegramClient
 from telethon.tl.types import UpdateShortMessage, User, InputPeerChat, UpdateShortChatMessage, UpdateNewChannelMessage, \
     UpdateNewMessage
+from telethon.utils import get_peer_id
 
 import tts
 
@@ -90,6 +91,9 @@ class TelegramClient(pykka.ThreadingActor):
 
     def on_update(self, update):
 
+        message = update.message
+
+
         if isinstance(update, UpdateShortChatMessage):
             upd = update  # type: UpdateShortChatMessage
             chat_id = upd.chat_id
@@ -99,11 +103,11 @@ class TelegramClient(pykka.ThreadingActor):
             chat_id = upd.user_id
             user_id = upd.user_id
         else:
-            upd = update  # type: UpdateNewChannelMessage
-            chat_id = upd.message.to_id.chat_id if upd.message.to_id.chat_id else( upd.message.to_id.channel_id if  upd.message.to_id.channel_id else  upd.message.to_id.user_id )
+            upd = update.message  # type: UpdateNewChannelMessage
+            chat_id = get_peer_id(upd.message.from_id)
             user_id = upd.message.from_id
+            message = upd.message.message
 
-        message = upd.message
 
         print(message)
 
