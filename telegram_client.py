@@ -7,7 +7,7 @@ from threading import Thread
 import pykka
 import telethon
 from telethon import TelegramClient
-from telethon.tl.types import UpdateShortMessage, User, InputPeerChat, UpdateShortChatMessage
+from telethon.tl.types import UpdateShortMessage, User, InputPeerChat, UpdateShortChatMessage, UpdateNewChannelMessage
 
 import tts
 
@@ -65,7 +65,7 @@ class TelegramClient(pykka.ThreadingActor):
             if message["command"] == "update":
                 update_ = message["update"]
                 # and self.get_user(update_).bot
-                if isinstance(update_, (UpdateShortMessage, UpdateShortChatMessage), ):
+                if isinstance(update_, (UpdateShortMessage, UpdateShortChatMessage, UpdateNewChannelMessage), ):
                     self.on_update(update_)
             elif message["command"] == "ask":
                 if self.chat_id:
