@@ -17,7 +17,7 @@ import tts
 class TelegramClient(pykka.ThreadingActor):
     def __init__(self, interceptor, rec):
         db = shelve.open("chat_id")
-        self.chat_id = None if "chat_id" not in db else db["chat_id"]
+        self.chat_peer = None if "chat_id" not in db else db["chat_id"]
         db.close()
         self.interceptor = interceptor
         self.rec = rec
@@ -69,9 +69,9 @@ class TelegramClient(pykka.ThreadingActor):
                 if isinstance(update_, (UpdateShortMessage, UpdateShortChatMessage, UpdateNewChannelMessage, UpdateNewMessage), ):
                     self.on_update(update_)
             elif message["command"] == "ask":
-                if self.chat_id:
+                if self.chat_peer:
                     self.delayed_resume()
-                    self.client.send_message(InputPeerChat(self.chat_id), message["text"])
+                    self.client.send_message(self.chat_peer, message["text"])
                 else:
                     self.interceptor.tell({"command": "resume"})
 
@@ -94,28 +94,28 @@ class TelegramClient(pykka.ThreadingActor):
 
         if isinstance(update, UpdateShortChatMessage):
             upd = update  # type: UpdateShortChatMessage
-            chat_id = upd.chat_id
+            chat_peer = InputPeerChat(upd.chat_id)
             user_id = upd.from_id
         elif isinstance(update, UpdateShortMessage):
             upd = update  # type: UpdateShortMessage
-            chat_id = upd.user_id
+            chat_peer = InputPeerChat(upd.user_id)
             user_id = upd.user_id
         else:
             upd = update.message  # type: Message
-            chat_id = get_peer_id(upd.to_id)
+            chat_peer = upd.to_id
             user_id = upd.from_id
 
         message = upd.message
 
 
         print(message)
-        print("chat_id" + str(chat_id))
+        print("chat_id" + str(chat_peer))
         print("user_id" + str(user_id))
 
         if message.startswith('#here'):
-            self.chat_id = chat_id
+            self.chat_peer = chat_peer
             db = shelve.open("chat_id")
-            db["chat_id"] = chat_id
+            db["chat_id"] = chat_peer
             db.close()
 
         user = self.client.get_entity(user_id)  # type: User
@@ -123,7 +123,7 @@ class TelegramClient(pykka.ThreadingActor):
             if message.endswith('?'):
                 reply = self.rec.ask({"command": "start", "tell": message})
                 if reply and len(reply) > 0:
-                    self.client.send_message(InputPeerChat(self.chat_id), reply)
+                    self.client.send_message(self.chat_peer, reply)
                     self.delayed_resume()
                 else:
                     self.delayed_resume(delay=1)
