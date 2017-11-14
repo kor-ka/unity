@@ -119,7 +119,7 @@ class TelegramClient(pykka.ThreadingActor):
 
         user = self.client.get_entity(user_id)  # type: User
         if message and len(message) > 0 and not upd.out and user.bot:
-            if update.message.endswith('?'):
+            if message.endswith('?'):
                 reply = self.rec.ask({"command": "start", "tell": message})
                 if reply and len(reply) > 0:
                     self.client.send_message(InputPeerChat(self.chat_id), reply)
