@@ -109,6 +109,8 @@ class TelegramClient(pykka.ThreadingActor):
 
 
         print(message)
+        print("chat_id" + str(chat_id))
+        print("user_id" + str(user_id))
 
         if message.startswith('#here'):
             self.chat_id = chat_id
