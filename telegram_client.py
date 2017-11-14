@@ -122,7 +122,7 @@ class TelegramClient(pykka.ThreadingActor):
                     if isinstance(c, Channel) and c.id == chat_peer:
                         access_hash = access_hash
 
-            self.chat_peer = Peer(chat_peer.chat_id, access_hash)
+            self.chat_peer = Peer(chat_peer, access_hash)
             db = shelve.open("chat_id")
             db["chat_id"] = self.chat_peer
             db.close()
