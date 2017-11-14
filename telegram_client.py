@@ -2,13 +2,14 @@ import logging
 import shelve
 import time
 import uuid
+from aetypes import Enum
 from threading import Thread
 
 import pykka
 import telethon
 from telethon import TelegramClient
 from telethon.tl.types import UpdateShortMessage, User, InputPeerChat, UpdateShortChatMessage, UpdateNewChannelMessage, \
-    UpdateNewMessage, Message
+    UpdateNewMessage, Message, InputPeerChannel, Channel
 from telethon.utils import get_peer_id
 
 import tts
@@ -66,12 +67,13 @@ class TelegramClient(pykka.ThreadingActor):
             if message["command"] == "update":
                 update_ = message["update"]
                 # and self.get_user(update_).bot
-                if isinstance(update_, (UpdateShortMessage, UpdateShortChatMessage, UpdateNewChannelMessage, UpdateNewMessage), ):
+                if isinstance(update_, (
+                UpdateShortMessage, UpdateShortChatMessage, UpdateNewChannelMessage, UpdateNewMessage), ):
                     self.on_update(update_)
             elif message["command"] == "ask":
                 if self.chat_peer:
                     self.delayed_resume()
-                    self.client.send_message(self.chat_peer, message["text"])
+                    self.client.send_message(self.chat_peer.build(), message["text"])
                 else:
                     self.interceptor.tell({"command": "resume"})
 
@@ -90,7 +92,8 @@ class TelegramClient(pykka.ThreadingActor):
 
     def on_update(self, update):
 
-
+        peer_type = PeerType.COMMON
+        access_hash = None
 
         if isinstance(update, UpdateShortChatMessage):
             upd = update  # type: UpdateShortChatMessage
@@ -102,20 +105,27 @@ class TelegramClient(pykka.ThreadingActor):
             user_id = upd.user_id
         else:
             upd = update.message  # type: Message
-            chat_peer = upd.to_id
+            chat_peer = get_peer_id(upd.to_id)
             user_id = upd.from_id
+            peer_type = PeerType.CHANNEL
+
+
 
         message = upd.message
 
-
         print(message)
-        print("chat_id" + str(chat_peer))
-        print("user_id" + str(user_id))
 
         if message.startswith('#here'):
-            self.chat_peer = chat_peer
+            if peer_type == PeerType.CHANNEL:
+                dialogs = self.client.get_dialogs(limit=None)
+                chats = dialogs.chats
+                for c in chats:
+                    if isinstance(c, Channel) and c.id == chat_peer:
+                        access_hash = access_hash
+
+            self.chat_peer = Peer(chat_peer.chat_id, access_hash)
             db = shelve.open("chat_id")
-            db["chat_id"] = chat_peer
+            db["chat_id"] = self.chat_peer
             db.close()
 
         user = self.client.get_entity(user_id)  # type: User
@@ -123,7 +133,7 @@ class TelegramClient(pykka.ThreadingActor):
             if message.endswith('?'):
                 reply = self.rec.ask({"command": "start", "tell": message})
                 if reply and len(reply) > 0:
-                    self.client.send_message(self.chat_peer, reply)
+                    self.client.send_message(self.chat_peer.build(), reply)
                     self.delayed_resume()
                 else:
                     self.delayed_resume(delay=1)
@@ -144,3 +154,21 @@ class TelegramClient(pykka.ThreadingActor):
 
         thread = Thread(target=delayed)
         thread.start()
+
+
+class Peer(object):
+    def __init__(self, type, id, asses_hash = None):
+        self.id = id
+        self.type = type
+        self.access_hash = asses_hash
+
+    def build(self):
+        if type == PeerType.COMMON:
+            return InputPeerChat(self.id)
+        else:
+            return InputPeerChannel(self.id, self.access_hash)
+
+
+class PeerType(Enum):
+    COMMON = 1
+    CHANNEL = 2
