@@ -96,11 +96,11 @@ class TelegramClient(pykka.ThreadingActor):
 
         if isinstance(update, UpdateShortChatMessage):
             upd = update  # type: UpdateShortChatMessage
-            chat_peer = InputPeerChat(upd.chat_id)
+            chat_peer = upd.chat_id
             user_id = upd.from_id
         elif isinstance(update, UpdateShortMessage):
             upd = update  # type: UpdateShortMessage
-            chat_peer = InputPeerChat(upd.user_id)
+            chat_peer = upd.user_id
             user_id = upd.user_id
         else:
             upd = update.message  # type: Message
