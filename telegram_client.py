@@ -117,7 +117,7 @@ class TelegramClient(pykka.ThreadingActor):
         if message.startswith('#here'):
             if peer_type == PeerType.CHANNEL:
                 dialogs = self.client.get_dialogs(limit=None)
-                chats = dialogs.chats
+                chats = dialogs[1]
                 for c in chats:
                     if isinstance(c, Channel) and c.id == chat_peer:
                         access_hash = access_hash
