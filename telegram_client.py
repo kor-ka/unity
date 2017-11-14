@@ -2,7 +2,6 @@ import logging
 import shelve
 import time
 import uuid
-from aetypes import Enum
 from threading import Thread
 
 import pykka
@@ -169,6 +168,6 @@ class Peer(object):
             return InputPeerChannel(self.id, self.access_hash)
 
 
-class PeerType(Enum):
+class PeerType:
     COMMON = 1
     CHANNEL = 2
